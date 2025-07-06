@@ -4,15 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>First Rank Parcel Service | Ship. Track. Deliver.</title>
+    
+    <!-- External Libraries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollTrigger.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
+        /* CSS Variables for Theming */
         :root {
             --primary: #0066cc;
+            --primary-light: rgba(0, 102, 204, 0.1);
             --secondary: #ff6b00;
+            --secondary-light: rgba(255, 107, 0, 0.1);
             --dark: #1a2a3a;
             --light: #f8f9fa;
             --success: #28a745;
@@ -21,6 +27,9 @@
             --card-bg: #ffffff;
             --nav-bg: rgba(255, 255, 255, 0.85);
             --section-gap: 40px;
+            --border-radius: 15px;
+            --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            --transition: all 0.3s ease;
         }
 
         [data-theme="dark"] {
@@ -28,14 +37,16 @@
             --text-color: #f8f9fa;
             --card-bg: #2c3e50;
             --nav-bg: rgba(26, 42, 58, 0.85);
+            --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
 
+        /* Base Styles */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            transition: background-color 0.3s, color 0.3s;
+            transition: var(--transition);
         }
 
         body {
@@ -43,9 +54,105 @@
             color: var(--text-color);
             overflow-x: hidden;
             line-height: 1.6;
+            scroll-behavior: smooth;
         }
 
-        /* Responsive Navbar */
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* Utility Classes */
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .section {
+            min-height: 100vh;
+            padding: 120px 0 80px;
+            position: relative;
+            margin: var(--section-gap) 0;
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            opacity: 0;
+            transform: translateY(50px);
+        }
+
+        .section.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: clamp(2rem, 4vw, 2.5rem);
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: var(--secondary);
+            border-radius: 2px;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto 60px;
+            color: var(--text-color);
+            opacity: 0.8;
+            font-size: 1.2rem;
+        }
+
+        .btn {
+            display: inline-block;
+            background: var(--secondary);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 30px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+            white-space: nowrap;
+        }
+
+        .btn:hover {
+            background: #e55a00;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(255, 107, 0, 0.3);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--secondary);
+            color: var(--secondary);
+        }
+
+        .btn-outline:hover {
+            background: var(--secondary);
+            color: white;
+        }
+
+        /* Header & Navigation */
         header {
             position: fixed;
             top: 0;
@@ -57,15 +164,13 @@
             align-items: center;
             background: var(--nav-bg);
             backdrop-filter: blur(10px);
-            border-radius: 0 0 20px 20px;
+            border-radius: 0 0 var(--border-radius) var(--border-radius);
             box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-            margin-bottom: var(--section-gap);
+            transition: var(--transition);
         }
 
         header.shrink {
             padding: 8px 5%;
-            border-radius: 0 0 15px 15px;
         }
 
         .logo {
@@ -94,7 +199,7 @@
             text-decoration: none;
             font-weight: 500;
             font-size: 1rem;
-            transition: all 0.3s ease;
+            transition: var(--transition);
             position: relative;
             padding: 5px 0;
         }
@@ -118,6 +223,7 @@
             width: 100%;
         }
 
+        /* Mobile Menu */
         .mobile-menu-btn {
             display: none;
             background: none;
@@ -178,26 +284,6 @@
             cursor: pointer;
         }
 
-        .cta-button {
-            background: var(--secondary);
-            color: white;
-            padding: 10px 20px;
-            border-radius: 30px;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            border: none;
-            cursor: pointer;
-            font-size: 0.9rem;
-            white-space: nowrap;
-        }
-
-        .cta-button:hover {
-            background: #e55a00;
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(255, 107, 0, 0.3);
-        }
-
         /* Utility Controls */
         .utility-controls {
             display: flex;
@@ -217,7 +303,7 @@
             justify-content: center;
             cursor: pointer;
             color: var(--text-color);
-            transition: all 0.3s ease;
+            transition: var(--transition);
         }
 
         .theme-toggle:hover, .language-selector:hover {
@@ -250,26 +336,7 @@
             font-size: 0.8rem;
         }
 
-        /* Sections */
-        section {
-            min-height: 100vh;
-            padding: 120px 10% 80px;
-            position: relative;
-            margin: var(--section-gap) 0;
-            background: var(--card-bg);
-            border-radius: 20px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            opacity: 0;
-            transform: translateY(50px);
-            transition: opacity 0.6s ease, transform 0.6s ease;
-        }
-
-        section.active {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* Home Section */
+        /* Hero Section */
         #home {
             display: flex;
             align-items: center;
@@ -331,7 +398,7 @@
 
         .tracking-form {
             background: var(--card-bg);
-            border-radius: 15px;
+            border-radius: var(--border-radius);
             padding: 30px;
             max-width: 500px;
             margin-top: 40px;
@@ -363,7 +430,7 @@
             color: var(--text-color);
             font-size: 1rem;
             outline: none;
-            transition: all 0.3s ease;
+            transition: var(--transition);
         }
 
         .input-group input:focus {
@@ -375,40 +442,7 @@
             color: rgba(0, 0, 0, 0.5);
         }
 
-        .input-group button {
-            border-radius: 50px;
-            padding: 0 25px;
-        }
-
         /* About Section */
-        .section-title {
-            text-align: center;
-            font-size: clamp(2rem, 4vw, 2.5rem);
-            margin-bottom: 20px;
-            position: relative;
-        }
-
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80px;
-            height: 4px;
-            background: var(--secondary);
-            border-radius: 2px;
-        }
-
-        .section-subtitle {
-            text-align: center;
-            max-width: 700px;
-            margin: 0 auto 60px;
-            color: var(--text-color);
-            opacity: 0.8;
-            font-size: 1.2rem;
-        }
-
         .about-content {
             display: flex;
             align-items: center;
@@ -443,8 +477,8 @@
             padding: 20px;
             border-radius: 10px;
             text-align: center;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: var(--transition);
+            box-shadow: var(--box-shadow);
             opacity: 0;
             transform: translateY(20px);
         }
@@ -469,7 +503,7 @@
             flex: 1;
             height: 400px;
             position: relative;
-            border-radius: 15px;
+            border-radius: var(--border-radius);
             overflow: hidden;
             background: var(--bg-color);
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
@@ -481,7 +515,7 @@
             width: 100%;
             height: 100%;
             overflow: hidden;
-            border-radius: 15px;
+            border-radius: var(--border-radius);
         }
 
         .carousel-inner {
@@ -556,11 +590,11 @@
 
         .service-card {
             background: var(--bg-color);
-            border-radius: 15px;
+            border-radius: var(--border-radius);
             padding: 30px;
             text-align: center;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: var(--transition);
+            box-shadow: var(--box-shadow);
             border: 1px solid rgba(0, 0, 0, 0.1);
             opacity: 0;
             transform: translateY(20px);
@@ -592,7 +626,7 @@
             max-width: 800px;
             margin: 50px auto 0;
             background: var(--bg-color);
-            border-radius: 15px;
+            border-radius: var(--border-radius);
             padding: 40px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
             border: 1px solid rgba(0, 0, 0, 0.1);
@@ -678,7 +712,7 @@
             background: var(--card-bg);
             padding: 20px;
             border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            box-shadow: var(--box-shadow);
         }
 
         .detail-card h4 {
@@ -702,7 +736,7 @@
             background: var(--card-bg);
             padding: 20px;
             border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            box-shadow: var(--box-shadow);
         }
 
         .detail-group h3 {
@@ -731,1445 +765,7 @@
             text-decoration: none;
             font-weight: 600;
             margin-top: 20px;
-            transition: all 0.3s ease;
+            transition: var(--transition);
         }
 
-        .download-btn:hover {
-            background: #e55a00;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(255, 107, 0, 0.3);
-        }
-
-        .download-btn i {
-            margin-right: 8px;
-        }
-
-        /* Contact Section */
-        .contact-container {
-            display: flex;
-            gap: 50px;
-            margin-top: 50px;
-        }
-
-        .contact-info {
-            flex: 1;
-        }
-
-        .contact-info h3 {
-            font-size: 1.8rem;
-            margin-bottom: 20px;
-        }
-
-        .contact-info p {
-            margin-bottom: 30px;
-            color: var(--text-color);
-            opacity: 0.8;
-        }
-
-        .contact-method {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .contact-method i {
-            width: 50px;
-            height: 50px;
-            background: rgba(255, 107, 0, 0.1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            font-size: 1.2rem;
-            color: var(--secondary);
-        }
-
-        .contact-method div h4 {
-            color: var(--text-color);
-            margin-bottom: 5px;
-        }
-
-        .contact-method div p {
-            margin-bottom: 0;
-            color: var(--text-color);
-            opacity: 0.8;
-        }
-
-        .contact-form {
-            flex: 1;
-            background: var(--card-bg);
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            border: 1px solid rgba(0, 0, 0, 0.1);
-        }
-
-        .contact-form h3 {
-            margin-bottom: 20px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: var(--text-color);
-        }
-
-        .form-group input,
-        .form-group textarea {
-            width: 100%;
-            padding: 15px;
-            border-radius: 8px;
-            border: 1px solid rgba(0, 0, 0, 0.1);
-            background: var(--card-bg);
-            color: var(--text-color);
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-
-        .form-group input:focus,
-        .form-group textarea:focus {
-            border-color: var(--secondary);
-            box-shadow: 0 0 0 3px rgba(255, 107, 0, 0.2);
-            outline: none;
-        }
-
-        .form-group textarea {
-            min-height: 150px;
-            resize: vertical;
-        }
-
-        /* Footer */
-        footer {
-            background: var(--dark);
-            padding: 40px 10%;
-            text-align: center;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px 20px 0 0;
-            margin-top: var(--section-gap);
-        }
-
-        .footer-content {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .footer-logo {
-            font-size: 2rem;
-            font-weight: 700;
-            margin-bottom: 20px;
-            color: white;
-        }
-
-        .footer-links {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 20px 30px;
-            margin: 20px 0;
-        }
-
-        .footer-links a {
-            color: #adb5bd;
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-
-        .footer-links a:hover {
-            color: var(--secondary);
-        }
-
-        .social-icons {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin: 30px 0;
-        }
-
-        .social-icons a {
-            width: 45px;
-            height: 45px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            color: white;
-            font-size: 1.2rem;
-            transition: all 0.3s ease;
-        }
-
-        .social-icons a:hover {
-            background: var(--secondary);
-            transform: translateY(-5px);
-        }
-
-        .copyright {
-            color: #adb5bd;
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        /* Animations */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-15px); }
-            100% { transform: translateY(0px); }
-        }
-
-        .floating {
-            animation: float 6s ease-in-out infinite;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 1200px) {
-            .about-content {
-                flex-direction: column;
-            }
-            
-            .about-visual {
-                width: 100%;
-                height: 300px;
-            }
-            
-            .contact-container {
-                flex-direction: column;
-            }
-        }
-
-        @media (max-width: 992px) {
-            .hero-content {
-                max-width: 100%;
-                text-align: center;
-            }
-            
-            #canvas-container {
-                display: none;
-            }
-            
-            .detail-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        @media (max-width: 768px) {
-            nav ul {
-                display: none;
-            }
-            
-            .mobile-menu-btn {
-                display: block;
-            }
-            
-            .utility-controls {
-                display: none;
-            }
-            
-            .mobile-menu .utility-controls {
-                display: flex;
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 15px;
-                margin-top: 20px;
-                padding-top: 20px;
-                border-top: 1px solid rgba(0, 0, 0, 0.1);
-            }
-            
-            .mobile-menu .theme-toggle, 
-            .mobile-menu .language-selector {
-                background: rgba(255, 255, 255, 0.1);
-            }
-            
-            section {
-                padding: 100px 5% 60px;
-            }
-            
-            .tracking-container {
-                padding: 30px 20px;
-            }
-        }
-
-        @media (max-width: 576px) {
-            .stats {
-                grid-template-columns: 1fr;
-            }
-            
-            .services-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .tracking-details {
-                grid-template-columns: 1fr;
-            }
-            
-            .input-group {
-                flex-direction: column;
-            }
-            
-            .input-group button {
-                width: 100%;
-                margin-top: 10px;
-            }
-        }
-    </style>
-</head>
-<body>
-    <!-- Main Application -->
-    <div id="main-app">
-        <header>
-            <div class="logo">
-                <i class="fas fa-shipping-fast"></i>
-                <span>First Rank Parcel</span>
-            </div>
-            
-            <nav>
-                <ul>
-                    <li><a href="#home">Home</a></li>
-                    <li><a href="#about">About</a></li>
-                    <li><a href="#services">Services</a></li>
-                    <li><a href="#tracking">Tracking</a></li>
-                    <li><a href="#contact">Contact</a></li>
-                </ul>
-                
-                <div class="utility-controls">
-                    <button class="theme-toggle" id="theme-toggle">
-                        <i class="fas fa-moon"></i>
-                    </button>
-                    <div class="language-selector">
-                        <select id="language-select">
-                            <option value="en">English</option>
-                            <option value="es">Spanish</option>
-                            <option value="fr">French</option>
-                            <option value="ar">Arabic</option>
-                            <option value="zh">Chinese</option>
-                        </select>
-                    </div>
-                    <a href="#tracking" class="cta-button">Track</a>
-                </div>
-            </nav>
-            
-            <button class="mobile-menu-btn" id="mobile-menu-btn">
-                <i class="fas fa-bars"></i>
-            </button>
-        </header>
         
-        <div class="mobile-menu" id="mobile-menu">
-            <button class="mobile-menu-close" id="mobile-menu-close">
-                <i class="fas fa-times"></i>
-            </button>
-            <ul>
-                <li><a href="#home">Home</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#services">Services</a></li>
-                <li><a href="#tracking">Tracking</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
-            
-            <div class="utility-controls">
-                <button class="theme-toggle" id="mobile-theme-toggle">
-                    <i class="fas fa-moon"></i> Dark Mode
-                </button>
-                <div class="language-selector">
-                    <select id="mobile-language-select">
-                        <option value="en">English</option>
-                        <option value="es">Spanish</option>
-                        <option value="fr">French</option>
-                        <option value="ar">Arabic</option>
-                        <option value="zh">Chinese</option>
-                    </select>
-                </div>
-                <a href="#tracking" class="cta-button">Track Shipment</a>
-            </div>
-        </div>
-
-        <section id="home">
-            <div class="hero-content">
-                <h1>Worldwide <span>Logistics</span> & Shipping Solutions</h1>
-                <p>Delivering excellence across the globe with real-time tracking and premium logistics services. Trust us to handle your shipments with care and precision.</p>
-                <a href="#services" class="cta-button">Our Services</a>
-                
-                <div class="tracking-form floating">
-                    <h3>Track Your Shipment</h3>
-                    <div class="input-group">
-                        <input type="text" id="tracking-input" placeholder="Enter your 8-digit tracking code">
-                        <button class="cta-button" id="track-btn">Track</button>
-                    </div>
-                </div>
-            </div>
-            
-            <div id="canvas-container"></div>
-        </section>
-
-        <section id="about">
-            <h2 class="section-title">About Us</h2>
-            <p class="section-subtitle">With over 20 years of experience, we provide reliable and efficient logistics solutions to businesses and individuals worldwide.</p>
-            
-            <div class="about-content">
-                <div class="about-text">
-                    <h3>Your Trusted Global Logistics Partner</h3>
-                    <p>First Rank Parcel Service is a premier provider of transportation and supply chain management solutions. We specialize in delivering time-sensitive shipments through our extensive global network.</p>
-                    <p>Our commitment to innovation and customer service has made us a leader in the logistics industry, serving clients in over 150 countries with customized solutions.</p>
-                    
-                    <div class="stats">
-                        <div class="stat-box">
-                            <h4>150+</h4>
-                            <p>Countries Served</p>
-                        </div>
-                        <div class="stat-box">
-                            <h4>25M+</h4>
-                            <p>Annual Shipments</p>
-                        </div>
-                        <div class="stat-box">
-                            <h4>98.7%</h4>
-                            <p>On-Time Delivery</p>
-                        </div>
-                        <div class="stat-box">
-                            <h4>24/7</h4>
-                            <p>Customer Support</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="about-visual">
-                    <div class="carousel">
-                        <div class="carousel-inner" id="carousel-inner">
-                            <div class="carousel-item" style="background-image: url('https://images.unsplash.com/photo-1450101499163-c8848c66ca85?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80')"></div>
-                            <div class="carousel-item" style="background-image: url('https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80')"></div>
-                            <div class="carousel-item" style="background-image: url('https://images.unsplash.com/photo-1520523839897-bd0b52f945a0?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80')"></div>
-                            <div class="carousel-item" style="background-image: url('https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80')"></div>
-                        </div>
-                        <button class="carousel-control prev" id="carousel-prev">&#10094;</button>
-                        <button class="carousel-control next" id="carousel-next">&#10095;</button>
-                        <div class="carousel-indicators" id="carousel-indicators">
-                            <button class="carousel-indicator active"></button>
-                            <button class="carousel-indicator"></button>
-                            <button class="carousel-indicator"></button>
-                            <button class="carousel-indicator"></button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="services">
-            <h2 class="section-title">Our Services</h2>
-            <p class="section-subtitle">We offer comprehensive logistics solutions tailored to meet your specific shipping requirements.</p>
-            
-            <div class="services-grid">
-                <div class="service-card">
-                    <i class="fas fa-plane"></i>
-                    <h3>Air Freight</h3>
-                    <p>Fast and reliable air cargo services for time-sensitive shipments across the globe.</p>
-                </div>
-                
-                <div class="service-card">
-                    <i class="fas fa-ship"></i>
-                    <h3>Ocean Freight</h3>
-                    <p>Cost-effective sea freight solutions for large volume shipments with flexible options.</p>
-                </div>
-                
-                <div class="service-card">
-                    <i class="fas fa-truck"></i>
-                    <h3>Ground Shipping</h3>
-                    <p>Efficient road transportation services with real-time tracking for domestic shipments.</p>
-                </div>
-                
-                <div class="service-card">
-                    <i class="fas fa-warehouse"></i>
-                    <h3>Warehousing</h3>
-                    <p>Secure storage solutions with inventory management and distribution services.</p>
-                </div>
-                
-                <div class="service-card">
-                    <i class="fas fa-box-open"></i>
-                    <h3>Packaging Solutions</h3>
-                    <p>Custom packaging services to ensure your items are protected during transit.</p>
-                </div>
-                
-                <div class="service-card">
-                    <i class="fas fa-globe-americas"></i>
-                    <h3>International Express</h3>
-                    <p>Priority international delivery services with customs clearance assistance.</p>
-                </div>
-            </div>
-        </section>
-
-        <section id="tracking">
-            <h2 class="section-title">Track Your Shipment</h2>
-            <p class="section-subtitle">
-                Enter your 8-digit tracking code to get real-time updates on your shipment's status.
-            </p>
-        
-            <div class="tracking-container">
-                <div class="input-group">
-                    <input type="text" id="tracking-input-2" placeholder="Enter your 8-digit tracking code">
-                    <button class="cta-button" id="track-btn-2">Track</button>
-                </div>
-                
-                <div class="tracking-result" id="tracking-result">
-                    <h3>Shipment Status: <span id="status-text">In Transit</span></h3>
-                    <p>Tracking Number: <strong id="tracking-number-display">FR12345678</strong></p>
-                    
-                    <div class="status-bar">
-                        <div class="status-progress" id="status-progress"></div>
-                    </div>
-                    
-                    <div class="status-steps">
-                        <div class="status-step active">
-                            <div class="dot"></div>
-                            <div class="label">Order Received</div>
-                        </div>
-                        <div class="status-step active">
-                            <div class="dot"></div>
-                            <div class="label">Processing</div>
-                        </div>
-                        <div class="status-step active">
-                            <div class="dot"></div>
-                            <div class="label">In Transit</div>
-                        </div>
-                        <div class="status-step">
-                            <div class="dot"></div>
-                            <div class="label">Out for Delivery</div>
-                        </div>
-                        <div class="status-step">
-                            <div class="dot"></div>
-                            <div class="label">Delivered</div>
-                        </div>
-                    </div>
-                    
-                    <div class="detail-grid">
-                        <!-- Shipper Information -->
-                        <div class="detail-group" data-group="shipper">
-                            <h3>Shipper Information</h3>
-                            <div class="detail-item">
-                                <strong>Name</strong>
-                                <p data-shipper="name"></p>
-                            </div>
-                            <div class="detail-item">
-                                <strong>Address</strong>
-                                <p data-shipper="address"></p>
-                            </div>
-                            <div class="detail-item">
-                                <strong>Phone</strong>
-                                <p data-shipper="phone"></p>
-                            </div>
-                            <div class="detail-item">
-                                <strong>Email</strong>
-                                <p data-shipper="email"></p>
-                            </div>
-                        </div>
-                        
-                        <!-- Receiver Information -->
-                        <div class="detail-group" data-group="receiver">
-                            <h3>Receiver Information</h3>
-                            <div class="detail-item">
-                                <strong>Name</strong>
-                                <p data-receiver="name"></p>
-                            </div>
-                            <div class="detail-item">
-                                <strong>Address</strong>
-                                <p data-receiver="address"></p>
-                            </div>
-                            <div class="detail-item">
-                                <strong>Phone</strong>
-                                <p data-receiver="phone"></p>
-                            </div>
-                            <div class="detail-item">
-                                <strong>Email</strong>
-                                <p data-receiver="email"></p>
-                            </div>
-                        </div>
-                        
-                        <!-- Shipment Information -->
-                        <div class="detail-group" data-group="shipment">
-                            <h3>Shipment Information</h3>
-                            <div class="detail-item">
-                                <strong>Origin</strong>
-                                <p data-shipment="origin"></p>
-                            </div>
-                            <div class="detail-item">
-                                <strong>Destination</strong>
-                                <p data-shipment="destination"></p>
-                            </div>
-                            <div class="detail-item">
-                                <strong>Carrier</strong>
-                                <p data-shipment="carrier"></p>
-                            </div>
-                            <div class="detail-item">
-                                <strong>Type</strong>
-                                <p data-shipment="type"></p>
-                            </div>
-                        </div>
-                        
-                        <!-- Package Details -->
-                        <div class="detail-group" data-group="package">
-                            <h3>Package Details</h3>
-                            <div class="detail-item">
-                                <strong>Contents</strong>
-                                <p data-package="contents"></p>
-                            </div>
-                            <div class="detail-item">
-                                <strong>Weight</strong>
-                                <p data-package="weight"></p>
-                            </div>
-                            <div class="detail-item">
-                                <strong>Status</strong>
-                                <p data-package="status"></p>
-                            </div>
-                            <div class="detail-item">
-                                <strong>Expected Delivery</strong>
-                                <p data-package="expectedDelivery"></p>
-                            </div>
-                            <div class="detail-item">
-                                <strong>Departure Time</strong>
-                                <p data-package="departureTime"></p>
-                            </div>
-                            <div class="detail-item">
-                                <strong>Pick-up Date</strong>
-                                <p data-package="pickupDate"></p>
-                            </div>
-                            <div class="detail-item">
-                                <strong>Pick-up Time</strong>
-                                <p data-package="pickupTime"></p>
-                            </div>
-                            <div class="detail-item">
-                                <strong>Comments</strong>
-                                <p data-package="comments"></p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <a href="#" class="download-btn" id="download-receipt">
-                        <i class="fas fa-file-pdf"></i> Download Receipt
-                    </a>
-                </div>
-            </div>
-        </section>
-
-        <section id="contact">
-            <h2 class="section-title">Contact Us</h2>
-            <p class="section-subtitle">Have questions? Our team is ready to assist you with all your shipping needs.</p>
-            
-            <div class="contact-container">
-                <div class="contact-info">
-                    <h3>Get In Touch</h3>
-                    <p>We're here to answer any questions you may have about our services. Reach out to us and we'll respond as soon as we can.</p>
-                    
-                    <div class="contact-method">
-                        <i class="fas fa-map-marker-alt"></i>
-                        <div>
-                            <h4>Headquarters</h4>
-                            <p>123 Logistics Park, New York, NY 10001, USA</p>
-                        </div>
-                    </div>
-                    
-                    <div class="contact-method">
-                        <i class="fas fa-phone-alt"></i>
-                        <div>
-                            <h4>Phone</h4>
-                            <p>+1 (772) 617-5380</p>
-                        </div>
-                    </div>
-                    
-                    <div class="contact-method">
-                        <i class="fas fa-envelope"></i>
-                        <div>
-                            <h4>Email</h4>
-                            <p>frankparcelservice@gmail.com</p>
-                        </div>
-                    </div>
-                    
-                    <div class="contact-method">
-                        <i class="fas fa-clock"></i>
-                        <div>
-                            <h4>Business Hours</h4>
-                            <p>Monday - Friday: 8AM - 8PM (EST)</p>
-                            <p>Saturday: 9AM - 5PM (EST)</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="contact-form">
-                    <h3>Send us a Message</h3>
-                    <form id="contact-form" action="mailto:frankparcelservice@gmail.com" method="post" enctype="text/plain">
-                        <div class="form-group">
-                            <label for="name">Full Name</label>
-                            <input type="text" id="name" name="name" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="email">Email Address</label>
-                            <input type="email" id="email" name="email" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="subject">Subject</label>
-                            <input type="text" id="subject" name="subject" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="message">Message</label>
-                            <textarea id="message" name="message" required></textarea>
-                        </div>
-                        
-                        <button type="submit" class="cta-button">Send Message</button>
-                    </form>
-                </div>
-            </div>
-        </section>
-
-        <footer>
-            <div class="footer-content">
-                <div class="footer-logo">
-                    <i class="fas fa-shipping-fast"></i> First Rank Parcel
-                </div>
-                
-                <p>Delivering excellence worldwide with innovative logistics solutions and unparalleled customer service.</p>
-                
-                <div class="footer-links">
-                    <a href="#home">Home</a>
-                    <a href="#about">About</a>
-                    <a href="#services">Services</a>
-                    <a href="#tracking">Tracking</a>
-                    <a href="#contact">Contact</a>
-                    <a href="#">Privacy Policy</a>
-                    <a href="#">Terms of Service</a>
-                </div>
-                
-                <div class="social-icons">
-                    <a href="#"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
-                    <a href="#"><i class="fab fa-youtube"></i></a>
-                </div>
-                
-                <div class="copyright">
-                    &copy; <span id="current-year">2025</span> First Rank Parcel Service. All rights reserved.
-                </div>
-            </div>
-        </footer>
-    </div>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
-    <script>
-        // Initialize Three.js scene
-        function initThreeJS() {
-            const container = document.getElementById('canvas-container');
-            if (!container) return;
-            
-            const scene = new THREE.Scene();
-            const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
-            const renderer = new THREE.WebGLRenderer({ alpha: true });
-            
-            renderer.setSize(container.clientWidth, container.clientHeight);
-            container.appendChild(renderer.domElement);
-            
-            // Create a globe with moving particles
-            const globeGroup = new THREE.Group();
-            scene.add(globeGroup);
-            
-            // Globe
-            const globeGeometry = new THREE.SphereGeometry(2, 32, 32);
-            const globeMaterial = new THREE.MeshBasicMaterial({
-                color: 0x0066cc,
-                wireframe: true,
-                transparent: true,
-                opacity: 0.3
-            });
-            const globe = new THREE.Mesh(globeGeometry, globeMaterial);
-            globeGroup.add(globe);
-            
-            // Particles (shipping routes)
-            const particlesGeometry = new THREE.BufferGeometry();
-            const particlesCount = 300;
-            const posArray = new Float32Array(particlesCount * 3);
-            
-            for (let i = 0; i < particlesCount * 3; i += 3) {
-                const radius = 2.5;
-                const theta = Math.random() * Math.PI * 2;
-                const phi = Math.acos(2 * Math.random() - 1);
-                
-                posArray[i] = radius * Math.sin(phi) * Math.cos(theta);
-                posArray[i + 1] = radius * Math.sin(phi) * Math.sin(theta);
-                posArray[i + 2] = radius * Math.cos(phi);
-            }
-            
-            particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-            const particlesMaterial = new THREE.PointsMaterial({
-                color: 0xff6b00,
-                size: 0.03,
-                transparent: true
-            });
-            
-            const particles = new THREE.Points(particlesGeometry, particlesMaterial);
-            globeGroup.add(particles);
-            
-            // Animate particles
-            const clock = new THREE.Clock();
-            
-            function animateParticles() {
-                const elapsedTime = clock.getElapsedTime();
-                
-                for (let i = 0; i < particlesCount; i++) {
-                    const i3 = i * 3;
-                    
-                    particlesGeometry.attributes.position.array[i3] += Math.sin(elapsedTime + i) * 0.002;
-                    particlesGeometry.attributes.position.array[i3 + 1] += Math.cos(elapsedTime + i) * 0.002;
-                    particlesGeometry.attributes.position.array[i3 + 2] += Math.sin(elapsedTime * 0.5 + i) * 0.002;
-                }
-                
-                particlesGeometry.attributes.position.needsUpdate = true;
-            }
-            
-            // Add moving planes (cargo planes)
-            const planeGroup = new THREE.Group();
-            scene.add(planeGroup);
-            
-            for (let i = 0; i < 5; i++) {
-                const planeGeometry = new THREE.BoxGeometry(0.2, 0.1, 0.4);
-                const planeMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
-                const plane = new THREE.Mesh(planeGeometry, planeMaterial);
-                
-                // Position planes in orbit around the globe
-                const radius = 3.5;
-                const angle = (i / 5) * Math.PI * 2;
-                plane.position.x = radius * Math.cos(angle);
-                plane.position.y = radius * Math.sin(angle) * 0.5;
-                plane.position.z = radius * Math.sin(angle) * 0.3;
-                
-                planeGroup.add(plane);
-            }
-            
-            camera.position.z = 5;
-            
-            function animate() {
-                requestAnimationFrame(animate);
-                
-                // Rotate globe
-                globeGroup.rotation.y += 0.002;
-                
-                // Rotate planes
-                planeGroup.rotation.y += 0.003;
-                
-                // Animate particles
-                animateParticles();
-                
-                renderer.render(scene, camera);
-            }
-            
-            // Handle window resize
-            window.addEventListener('resize', () => {
-                camera.aspect = container.clientWidth / container.clientHeight;
-                camera.updateProjectionMatrix();
-                renderer.setSize(container.clientWidth, container.clientHeight);
-            });
-            
-            animate();
-        }
-        
-        // Carousel functionality
-        function initCarousel() {
-            const carouselInner = document.getElementById('carousel-inner');
-            const prevBtn = document.getElementById('carousel-prev');
-            const nextBtn = document.getElementById('carousel-next');
-            const indicators = document.querySelectorAll('.carousel-indicator');
-            
-            let currentIndex = 0;
-            const itemCount = document.querySelectorAll('.carousel-item').length;
-            
-            function updateCarousel() {
-                carouselInner.style.transform = `translateX(-${currentIndex * 100}%)`;
-                
-                // Update indicators
-                indicators.forEach((indicator, index) => {
-                    if (index === currentIndex) {
-                        indicator.classList.add('active');
-                    } else {
-                        indicator.classList.remove('active');
-                    }
-                });
-            }
-            
-            prevBtn.addEventListener('click', () => {
-                currentIndex = (currentIndex > 0) ? currentIndex - 1 : itemCount - 1;
-                updateCarousel();
-            });
-            
-            nextBtn.addEventListener('click', () => {
-                currentIndex = (currentIndex < itemCount - 1) ? currentIndex + 1 : 0;
-                updateCarousel();
-            });
-            
-            // Auto-advance every 5 seconds
-            setInterval(() => {
-                currentIndex = (currentIndex < itemCount - 1) ? currentIndex + 1 : 0;
-                updateCarousel();
-            }, 5000);
-            
-            // Click on indicator to go to specific slide
-            indicators.forEach((indicator, index) => {
-                indicator.addEventListener('click', () => {
-                    currentIndex = index;
-                    updateCarousel();
-                });
-            });
-        }
-        
- 
-            // Add logo
-            doc.setFontSize(24);
-            doc.setTextColor(0, 102, 204);
-            doc.setFont('helvetica', 'bold');
-            doc.text('First Rank Parcel Service', 105, 20, null, null, 'center');
-            
-            doc.setFontSize(12);
-            doc.setTextColor(127, 140, 141);
-            doc.setFont('helvetica', 'normal');
-            doc.text('Shipment Receipt', 105, 28, null, null, 'center');
-            
-            // Add tracking info
-            doc.setDrawColor(255, 107, 0);
-            doc.setLineWidth(0.5);
-            doc.line(20, 35, 190, 35);
-            
-            doc.setFontSize(14);
-            doc.setTextColor(26, 42, 58);
-            doc.text('Tracking Information', 20, 45);
-            
-            doc.setFontSize(12);
-            doc.setTextColor(108, 117, 125);
-            doc.text(`Tracking Number: ${trackingNumber}`, 20, 55);
-            doc.text('Status: In Transit', 20, 62);
-            doc.text('Origin: New York, USA', 20, 69);
-            doc.text('Destination: London, UK', 20, 76);
-            doc.text('Estimated Delivery: August 29, 2025', 20, 83);
-            doc.text('Last Update: June 20, 2025 14:30 GMT', 20, 90);
-            
-            // Add progress bar
-            doc.setFillColor(40, 167, 69);
-            doc.rect(20, 100, 100, 8, 'F');
-            doc.setFillColor(189, 195, 199);
-            doc.rect(120, 100, 50, 8, 'F');
-            
-            doc.setFontSize(10);
-            doc.setTextColor(26, 42, 58);
-            doc.text('Progress: 60%', 20, 115);
-            
-            // Add timeline
-            doc.setFontSize(11);
-            doc.text('✓ Order Received', 20, 130);
-            doc.text('✓ Processing', 50, 130);
-            doc.text('✓ In Transit', 90, 130);
-            doc.text('Out for Delivery', 130, 130);
-            doc.text('Delivered', 170, 130);
-            
-            // Add shipper information
-            doc.setFontSize(14);
-            doc.setTextColor(26, 42, 58);
-            doc.text('Shipper Information', 20, 150);
-            
-            doc.setFontSize(12);
-            doc.setTextColor(108, 117, 125);
-            doc.text('Name: Individual Development Account program (IDA)', 20, 160);
-            doc.text('Address: 11 sangcredo street', 20, 167);
-            doc.text('Phone: 19056558297', 20, 174);
-            doc.text('Email: shoppingmals@gmail.com', 20, 181);
-            
-            // Add receiver information
-            doc.setFontSize(14);
-            doc.setTextColor(26, 42, 58);
-            doc.text('Receiver Information', 20, 195);
-            
-            doc.setFontSize(12);
-            doc.setTextColor(108, 117, 125);
-            doc.text('Name: Jason Boume', 20, 205);
-            doc.text('Address: 11 baracks street, bocija, Texas, USA', 20, 212);
-            doc.text('Phone: +1234567890', 20, 219);
-            doc.text('Email: buyer@gmail.com', 20, 226);
-            
-            // Add footer
-            doc.setDrawColor(236, 240, 241);
-            doc.setLineWidth(0.5);
-            doc.line(20, 250, 190, 250);
-            
-            doc.setFontSize(10);
-            doc.setTextColor(108, 117, 125);
-            doc.text('First Rank Parcel Service - frankparcelservice@gmail.com', 105, 255, null, null, 'center');
-            doc.text('© 2025 First Rank Parcel Service. All rights reserved.', 105, 260, null, null, 'center');
-            
-            // Save the PDF
-            doc.save(`FirstRankParcel-Shipment-${trackingNumber}.pdf`);
-        }
-        
-        // Theme Toggle
-        const themeToggle = document.getElementById('theme-toggle');
-        const mobileThemeToggle = document.getElementById('mobile-theme-toggle');
-        const body = document.body;
-        
-        function toggleTheme() {
-            if (body.getAttribute('data-theme') === 'dark') {
-                body.removeAttribute('data-theme');
-                localStorage.setItem('theme', 'light');
-                themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
-                mobileThemeToggle.innerHTML = '<i class="fas fa-moon"></i> Dark Mode';
-            } else {
-                body.setAttribute('data-theme', 'dark');
-                localStorage.setItem('theme', 'dark');
-                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-                mobileThemeToggle.innerHTML = '<i class="fas fa-sun"></i> Light Mode';
-            }
-        }
-        
-        // Check for saved theme preference
-        if (localStorage.getItem('theme') === 'dark') {
-            body.setAttribute('data-theme', 'dark');
-            themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-            mobileThemeToggle.innerHTML = '<i class="fas fa-sun"></i> Light Mode';
-        }
-        
-        themeToggle.addEventListener('click', toggleTheme);
-        mobileThemeToggle.addEventListener('click', toggleTheme);
-        
-        // Mobile Menu
-        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-        const mobileMenuClose = document.getElementById('mobile-menu-close');
-        const mobileMenu = document.getElementById('mobile-menu');
-        
-        function toggleMobileMenu() {
-            mobileMenu.classList.toggle('active');
-            mobileMenuBtn.innerHTML = mobileMenu.classList.contains('active') ? 
-                '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
-        }
-        
-        mobileMenuBtn.addEventListener('click', toggleMobileMenu);
-        mobileMenuClose.addEventListener('click', toggleMobileMenu);
-        
-        // Close mobile menu when clicking outside
-        document.addEventListener('click', (e) => {
-            if (!mobileMenu.contains(e.target) && e.target !== mobileMenuBtn) {
-                mobileMenu.classList.remove('active');
-                mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
-            }
-        });
-        
-        // Language Selector
-        const languageSelect = document.getElementById('language-select');
-        const mobileLanguageSelect = document.getElementById('mobile-language-select');
-        
-        // Translation dictionary
-        const translations = {
-            en: {
-                home: "Home",
-                about: "About",
-                services: "Services",
-                tracking: "Tracking",
-                contact: "Contact",
-                trackBtn: "Track",
-                darkMode: "Dark Mode",
-                lightMode: "Light Mode",
-                heroTitle: "Worldwide <span>Logistics</span> & Shipping Solutions",
-                heroText: "Delivering excellence across the globe with real-time tracking and premium logistics services. Trust us to handle your shipments with care and precision.",
-                ourServices: "Our Services",
-                trackFormTitle: "Track Your Shipment",
-                trackPlaceholder: "Enter your 8-digit tracking code",
-                aboutTitle: "About Us",
-                aboutSubtitle: "With over 20 years of experience, we provide reliable and efficient logistics solutions to businesses and individuals worldwide.",
-                aboutHeading: "Your Trusted Global Logistics Partner",
-                aboutText1: "First Rank Parcel Service is a premier provider of transportation and supply chain management solutions. We specialize in delivering time-sensitive shipments through our extensive global network.",
-                aboutText2: "Our commitment to innovation and customer service has made us a leader in the logistics industry, serving clients in over 150 countries with customized solutions.",
-                servicesTitle: "Our Services",
-                servicesSubtitle: "We offer comprehensive logistics solutions tailored to meet your specific shipping requirements.",
-                trackingTitle: "Track Your Shipment",
-                trackingSubtitle: "Enter your 8-digit tracking code to get real-time updates on your shipment's status.",
-                contactTitle: "Contact Us",
-                contactSubtitle: "Have questions? Our team is ready to assist you with all your shipping needs.",
-                contactHeading: "Get In Touch",
-                contactText: "We're here to answer any questions you may have about our services. Reach out to us and we'll respond as soon as we can.",
-                sendMessage: "Send Message",
-                footerText: "Delivering excellence worldwide with innovative logistics solutions and unparalleled customer service.",
-                privacy: "Privacy Policy",
-                terms: "Terms of Service"
-            },
-            es: {
-                home: "Inicio",
-                about: "Sobre Nosotros",
-                services: "Servicios",
-                tracking: "Seguimiento",
-                contact: "Contacto",
-                trackBtn: "Rastrear",
-                darkMode: "Modo Oscuro",
-                lightMode: "Modo Claro",
-                heroTitle: "Soluciones de <span>Logística</span> y Envío Mundial",
-                heroText: "Entregando excelencia en todo el mundo con seguimiento en tiempo real y servicios logísticos premium. Confíe en nosotros para manejar sus envíos con cuidado y precisión.",
-                ourServices: "Nuestros Servicios",
-                trackFormTitle: "Rastrear Su Envío",
-                trackPlaceholder: "Ingrese su código de seguimiento de 8 dígitos",
-                aboutTitle: "Sobre Nosotros",
-                aboutSubtitle: "Con más de 20 años de experiencia, proporcionamos soluciones logísticas confiables y eficientes para empresas e individuos en todo el mundo.",
-                aboutHeading: "Su Socio de Logística Global de Confianza",
-                aboutText1: "First Rank Parcel Service es un proveedor líder de soluciones de transporte y gestión de la cadena de suministro. Nos especializamos en la entrega de envíos urgentes a través de nuestra extensa red global.",
-                aboutText2: "Nuestro compromiso con la innovación y el servicio al cliente nos ha convertido en líderes en la industria logística, atendiendo a clientes en más de 150 países con soluciones personalizadas.",
-                servicesTitle: "Nuestros Servicios",
-                servicesSubtitle: "Ofrecemos soluciones logísticas integrales adaptadas a sus requisitos de envío específicos.",
-                trackingTitle: "Rastrear Su Envío",
-                trackingSubtitle: "Ingrese su código de seguimiento de 8 dígitos para obtener actualizaciones en tiempo real sobre el estado de su envío.",
-                contactTitle: "Contáctenos",
-                contactSubtitle: "¿Tiene preguntas? Nuestro equipo está listo para ayudarlo con todas sus necesidades de envío.",
-                contactHeading: "Póngase en Contacto",
-                contactText: "Estamos aquí para responder cualquier pregunta que pueda tener sobre nuestros servicios. Comuníquese con nosotros y le responderemos lo antes posible.",
-                sendMessage: "Enviar Mensaje",
-                footerText: "Entregando excelencia en todo el mundo con soluciones logísticas innovadoras y un servicio al cliente incomparable.",
-                privacy: "Política de Privacidad",
-                terms: "Términos de Servicio"
-            },
-            fr: {
-                home: "Accueil",
-                about: "À Propos",
-                services: "Services",
-                tracking: "Suivi",
-                contact: "Contact",
-                trackBtn: "Suivre",
-                darkMode: "Mode Sombre",
-                lightMode: "Mode Clair",
-                heroTitle: "Solutions de <span>Logistique</span> et d'Expédition Mondiale",
-                heroText: "Livrer l'excellence à travers le monde avec un suivi en temps réel et des services logistiques premium. Faites-nous confiance pour gérer vos expéditions avec soin et précision.",
-                ourServices: "Nos Services",
-                trackFormTitle: "Suivre Votre Expédition",
-                trackPlaceholder: "Entrez votre code de suivi à 8 chiffres",
-                aboutTitle: "À Propos de Nous",
-                aboutSubtitle: "Avec plus de 20 ans d'expérience, nous fournissons des solutions logistiques fiables et efficaces aux entreprises et aux particuliers du monde entier.",
-                aboutHeading: "Votre Partenaire Logistique Mondial de Confiance",
-                aboutText1: "First Rank Parcel Service est un fournisseur de premier plan de solutions de transport et de gestion de la chaîne d'approvisionnement. Nous nous spécialisons dans la livraison d'expéditions urgentes grâce à notre vaste réseau mondial.",
-                aboutText2: "Notre engagement envers l'innovation et le service client nous a permis de devenir un leader dans l'industrie logistique, desservant des clients dans plus de 150 pays avec des solutions personnalisées.",
-                servicesTitle: "Nos Services",
-                servicesSubtitle: "Nous proposons des solutions logistiques complètes adaptées à vos besoins d'expédition spécifiques.",
-                trackingTitle: "Suivre Votre Expédition",
-                trackingSubtitle: "Entrez votre code de suivi à 8 chiffres pour obtenir des mises à jour en temps réel sur l'état de votre expédition.",
-                contactTitle: "Contactez-Nous",
-                contactSubtitle: "Vous avez des questions ? Notre équipe est prête à vous aider pour tous vos besoins d'expédition.",
-                contactHeading: "Entrer en Contact",
-                contactText: "Nous sommes là pour répondre à toutes vos questions sur nos services. Contactez-nous et nous vous répondrons dès que possible.",
-                sendMessage: "Envoyer un Message",
-                footerText: "Livrer l'excellence dans le monde entier avec des solutions logistiques innovantes et un service client inégalé.",
-                privacy: "Politique de Confidentialité",
-                terms: "Conditions de Service"
-            },
-            ar: {
-                home: "الرئيسية",
-                about: "من نحن",
-                services: "الخدمات",
-                tracking: "تتبع",
-                contact: "اتصل بنا",
-                trackBtn: "تتبع",
-                darkMode: "الوضع المظلم",
-                lightMode: "الوضع الفاتح",
-                heroTitle: "حلول <span>اللوجستيات</span> والشحن العالمية",
-                heroText: "نقدم التميز في جميع أنحاء العالم مع تتبع في الوقت الحقيقي وخدمات لوجستية متميزة. ثق بنا للتعامل مع شحناتك بعناية ودقة.",
-                ourServices: "خدماتنا",
-                trackFormTitle: "تتبع شحنتك",
-                trackPlaceholder: "أدخل رمز التتبع المكون من 8 أرقام",
-                aboutTitle: "من نحن",
-                aboutSubtitle: "مع أكثر من 20 عامًا من الخبرة، نقدم حلول لوجستية موثوقة وفعالة للشركات والأفراد في جميع أنحاء العالم.",
-                aboutHeading: "شريكك الموثوق في الخدمات اللوجستية العالمية",
-                aboutText1: "First Rank Parcel Service هي مزود رائد لحلول النقل وإدارة سلسلة التوريد. نحن متخصصون في تسليم الشحنات الحساسة للوقت من خلال شبكتنا العالمية الواسعة.",
-                aboutText2: "التزامنا بالابتكار وخدمة العملاء جعلنا قادة في صناعة الخدمات اللوجستية، حيث نخدم العملاء في أكثر من 150 دولة بحلول مخصصة.",
-                servicesTitle: "خدماتنا",
-                servicesSubtitle: "نقدم حلول لوجستية شاملة مصممة لتلبية متطلبات الشحن الخاصة بك.",
-                trackingTitle: "تتبع شحنتك",
-                trackingSubtitle: "أدخل رمز التتبع المكون من 8 أرقام للحصول على تحديثات في الوقت الفعلي حول حالة شحنتك.",
-                contactTitle: "اتصل بنا",
-                contactSubtitle: "هل لديك أسئلة؟ فريقنا جاهز لمساعدتك في جميع احتياجات الشحن الخاصة بك.",
-                contactHeading: "تواصل معنا",
-                contactText: "نحن هنا للإجابة على أي أسئلة قد تكون لديكم حول خدماتنا. تواصلوا معنا وسنرد عليكم في أقرب وقت ممكن.",
-                sendMessage: "إرسال رسالة",
-                footerText: "تقديم التميز في جميع أنحاء العالم مع حلول لوجستية مبتكرة وخدمة عملاء لا مثيل لها.",
-                privacy: "سياسة الخصوصية",
-                terms: "شروط الخدمة"
-            },
-            zh: {
-                home: "首页",
-                about: "关于我们",
-                services: "服务",
-                tracking: "追踪",
-                contact: "联系我们",
-                trackBtn: "追踪",
-                darkMode: "暗黑模式",
-                lightMode: "明亮模式",
-                heroTitle: "全球<span>物流</span>与运输解决方案",
-                heroText: "通过实时跟踪和优质物流服务在全球范围内提供卓越服务。相信我们能以细心和精确处理您的货物。",
-                ourServices: "我们的服务",
-                trackFormTitle: "追踪您的货物",
-                trackPlaceholder: "输入您的8位追踪码",
-                aboutTitle: "关于我们",
-                aboutSubtitle: "凭借20多年的经验，我们为全球企业和个人提供可靠高效的物流解决方案。",
-                aboutHeading: "您值得信赖的全球物流合作伙伴",
-                aboutText1: "First Rank Parcel Service是运输和供应链管理解决方案的领先提供商。我们专注于通过我们广泛的全球网络交付时间敏感的货物。",
-                aboutText2: "我们对创新和客户服务的承诺使我们成为物流行业的领导者，为150多个国家的客户提供定制解决方案。",
-                servicesTitle: "我们的服务",
-                servicesSubtitle: "我们提供全面的物流解决方案，以满足您的特定运输需求。",
-                trackingTitle: "追踪您的货物",
-                trackingSubtitle: "输入您的8位追踪码以获取货物状态的实时更新。",
-                contactTitle: "联系我们",
-                contactSubtitle: "有问题吗？我们的团队随时准备帮助您解决所有运输需求。",
-                contactHeading: "取得联系",
-                contactText: "我们在这里回答您可能对我们的服务提出的任何问题。联系我们，我们将尽快回复您。",
-                sendMessage: "发送消息",
-                footerText: "通过创新的物流解决方案和无与伦比的客户服务在全球范围内提供卓越服务。",
-                privacy: "隐私政策",
-                terms: "服务条款"
-            }
-        };
-        
-        function changeLanguage(lang) {
-            // Update all text elements with translations
-            const elements = document.querySelectorAll('[data-translate]');
-            elements.forEach(el => {
-                const key = el.getAttribute('data-translate');
-                if (translations[lang] && translations[lang][key]) {
-                    if (key === 'heroTitle') {
-                        el.innerHTML = translations[lang][key];
-                    } else {
-                        el.textContent = translations[lang][key];
-                    }
-                }
-            });
-            
-            // Update placeholders
-            document.querySelectorAll('#tracking-input, #tracking-input-2').forEach(input => {
-                input.placeholder = translations[lang]['trackPlaceholder'];
-            });
-            
-            // Update mobile theme toggle text
-            if (body.getAttribute('data-theme') === 'dark') {
-                mobileThemeToggle.innerHTML = `<i class="fas fa-sun"></i> ${translations[lang]['lightMode']}`;
-            } else {
-                mobileThemeToggle.innerHTML = `<i class="fas fa-moon"></i> ${translations[lang]['darkMode']}`;
-            }
-            
-            localStorage.setItem('language', lang);
-        }
-        
-        // Check for saved language preference
-        const savedLang = localStorage.getItem('language') || 'en';
-        languageSelect.value = savedLang;
-        mobileLanguageSelect.value = savedLang;
-        changeLanguage(savedLang);
-        
-        languageSelect.addEventListener('change', function() {
-            changeLanguage(this.value);
-        });
-        
-        mobileLanguageSelect.addEventListener('change', function() {
-            changeLanguage(this.value);
-        });
-        
-        // Navbar Scroll Effect
-        let lastScroll = 0;
-        const header = document.querySelector('header');
-        
-        window.addEventListener('scroll', () => {
-            const currentScroll = window.pageYOffset;
-            
-            if (currentScroll <= 0) {
-                header.classList.remove('shrink');
-                return;
-            }
-            
-            if (currentScroll > lastScroll && !header.classList.contains('shrink')) {
-                header.classList.add('shrink');
-            } else if (currentScroll < lastScroll && header.classList.contains('shrink')) {
-                header.classList.remove('shrink');
-            }
-            
-            lastScroll = currentScroll;
-        });
-        
-        // Scroll Animations
-        gsap.registerPlugin(ScrollTrigger);
-        
-        // Animate sections
-        gsap.utils.toArray('section').forEach(section => {
-            ScrollTrigger.create({
-                trigger: section,
-                start: "top 80%",
-                onEnter: () => section.classList.add('active')
-            });
-        });
-        
-        // Animate stats and service cards
-        gsap.utils.toArray('.stat-box, .service-card').forEach(item => {
-            ScrollTrigger.create({
-                trigger: item,
-                start: "top 80%",
-                onEnter: () => item.classList.add('active')
-            });
-        });
-        
-        // Generate random 8-digit alphanumeric tracking code
-        function generateTrackingCode() {
-            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-            let result = '';
-            for (let i = 0; i < 8; i++) {
-                result += chars.charAt(Math.floor(Math.random() * chars.length));
-            }
-            return result;
-        }
-        
-        // Handle tracking form submission
-        function handleTrackingSubmission(inputId, btnId) {
-            const trackingInput = document.getElementById(inputId);
-            const trackBtn = document.getElementById(btnId);
-            
-            trackBtn.addEventListener('click', function() {
-                const trackingNumber = trackingInput.value.trim().toUpperCase();
-                
-                if (trackingNumber.length === 8) {
-                    // Retrieve shipment data from localStorage
-                    const shipmentData = JSON.parse(localStorage.getItem(`shipment_${trackingNumber}`));
-                    
-                    if (shipmentData) {
-                        displayTrackingInfo(shipmentData);
-                        
-                        // Scroll to tracking result if needed
-                        document.getElementById('tracking-result').scrollIntoView({ behavior: 'smooth' });
-                    } else {
-                        alert('No shipment found with that tracking number. Please check and try again.');
-                    }
-                } else {
-                    alert('Please enter a valid 8-character tracking code');
-                }
-            });
-            
-            // Also allow Enter key to submit
-            trackingInput.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    trackBtn.click();
-                }
-            });
-        }
-        
-        // Display tracking information
-        function displayTrackingInfo(shipmentData) {
-            const trackingResult = document.getElementById('tracking-result');
-            const statusText = document.getElementById('status-text');
-            const trackingNumberDisplay = document.getElementById('tracking-number-display');
-            const statusProgress = document.getElementById('status-progress');
-            const statusSteps = document.querySelectorAll('.status-step');
-            
-            // Update basic info
-            statusText.textContent = shipmentData.status;
-            trackingNumberDisplay.textContent = shipmentData.trackingCode;
-            statusProgress.style.width = `${shipmentData.progress}%`;
-            
-            // Update status steps based on progress
-            statusSteps.forEach((step, index) => {
-                if (index * 25 < shipmentData.progress) {
-                    step.classList.add('active');
-                } else {
-                    step.classList.remove('active');
-                }
-            });
-            
-            // Update shipper information
-            document.querySelector('[data-shipper="name"]').textContent = shipmentData.shipper.name;
-            document.querySelector('[data-shipper="address"]').textContent = shipmentData.shipper.address;
-            document.querySelector('[data-shipper="phone"]').textContent = shipmentData.shipper.phone;
-            document.querySelector('[data-shipper="email"]').textContent = shipmentData.shipper.email;
-            
-            // Update receiver information
-            document.querySelector('[data-receiver="name"]').textContent = shipmentData.receiver.name;
-            document.querySelector('[data-receiver="address"]').textContent = shipmentData.receiver.address;
-            document.querySelector('[data-receiver="phone"]').textContent = shipmentData.receiver.phone;
-            document.querySelector('[data-receiver="email"]').textContent = shipmentData.receiver.email;
-            
-            // Update shipment information
-            document.querySelector('[data-shipment="origin"]').textContent = shipmentData.shipment.origin;
-            document.querySelector('[data-shipment="destination"]').textContent = shipmentData.shipment.destination;
-            document.querySelector('[data-shipment="carrier"]').textContent = shipmentData.shipment.carrier;
-            document.querySelector('[data-shipment="type"]').textContent = shipmentData.shipment.type;
-            
-            // Update package details
-            document.querySelector('[data-package="contents"]').textContent = shipmentData.package.contents;
-            document.querySelector('[data-package="weight"]').textContent = shipmentData.package.weight + ' kg';
-            document.querySelector('[data-package="status"]').textContent = shipmentData.status;
-            document.querySelector('[data-package="expectedDelivery"]').textContent = shipmentData.package.expectedDelivery;
-            document.querySelector('[data-package="departureTime"]').textContent = `${shipmentData.package.departureDate} ${shipmentData.package.departureTime}`;
-            document.querySelector('[data-package="pickupDate"]').textContent = shipmentData.package.pickupDate;
-            document.querySelector('[data-package="pickupTime"]').textContent = shipmentData.package.pickupTime;
-            document.querySelector('[data-package="comments"]').textContent = shipmentData.package.comments || 'No special instructions';
-            
-            
-            // Show the tracking result
-            trackingResult.classList.add('active');
-        }
-        
-        // Update copyright year
-        document.getElementById('current-year').textContent = new Date().getFullYear();
-        
-        // Main initialization
-        document.addEventListener('DOMContentLoaded', function() {
-            // Initialize 3D scene
-            initThreeJS();
-            
-            // Initialize carousel
-            initCarousel();
-            
-            // Set up tracking forms
-            handleTrackingSubmission('tracking-input', 'track-btn');
-            handleTrackingSubmission('tracking-input-2', 'track-btn-2');
-            
-            // Check if there's a tracking code in the URL
-            const urlParams = new URLSearchParams(window.location.search);
-            const trackingCode = urlParams.get('tracking');
-            
-            if (trackingCode) {
-                // Auto-fill and submit the tracking form
-                document.getElementById('tracking-input-2').value = trackingCode;
-                document.getElementById('track-btn-2').click();
-            }
-            
-            // Smooth scrolling for navigation
-            document.querySelectorAll('nav a, .mobile-menu a').forEach(anchor => {
-                anchor.addEventListener('click', function(e) {
-                    if (this.getAttribute('href').startsWith('#')) {
-                        e.preventDefault();
-                        const targetId = this.getAttribute('href');
-                        document.querySelector(targetId).scrollIntoView({
-                            behavior: 'smooth'
-                        });
-                        
-                        // Close mobile menu if open
-                        mobileMenu.classList.remove('active');
-                        mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
-                    }
-                });
-            });
-        });
-    </script>
-    <!--Start of Tawk.to Script-->
-<script type="text/javascript">
-var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-(function(){
-var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-s1.async=true;
-s1.src='https://embed.tawk.to/686a8883be8a1b1910b8507b/default';
-s1.charset='UTF-8';
-s1.setAttribute('crossorigin','*');
-s0.parentNode.insertBefore(s1,s0);
-})();
-</script>
-<!--End of Tawk.to Script-->
-</body>
-</html>
