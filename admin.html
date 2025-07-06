@@ -697,7 +697,7 @@
             </button>
         </div>
 
-        <!-- Create Shipment Tab -->
+                <!-- Create Shipment Tab -->
         <div class="tab-content active" id="create-tab">
             <div id="shipment-form-container">
                 <div class="container">
@@ -715,4 +715,366 @@
                                     <div class="form-group">
                                         <label for="shipper-email">Email</label>
                                         <input type="email" id="shipper-email" required>
-                             
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="shipper-phone">Phone Number</label>
+                                        <input type="tel" id="shipper-phone" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="shipper-address">Address</label>
+                                        <input type="text" id="shipper-address" required>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-section">
+                                <h2><i class="fas fa-user-check"></i> Receiver Information</h2>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="receiver-name">Full Name</label>
+                                        <input type="text" id="receiver-name" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="receiver-email">Email</label>
+                                        <input type="email" id="receiver-email" required>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="receiver-phone">Phone Number</label>
+                                        <input type="tel" id="receiver-phone" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="receiver-address">Address</label>
+                                        <input type="text" id="receiver-address" required>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-section">
+                                <h2><i class="fas fa-shipping-fast"></i> Shipment Details</h2>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="origin">Origin Country</label>
+                                        <input type="text" id="origin" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="destination">Destination Country</label>
+                                        <input type="text" id="destination" required>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="carrier">Carrier</label>
+                                        <select id="carrier" required>
+                                            <option value="">Select Carrier</option>
+                                            <option value="USPS">USPS</option>
+                                            <option value="FedEx">FedEx</option>
+                                            <option value="UPS">UPS</option>
+                                            <option value="DHL">DHL</option>
+                                            <option value="First Rank">First Rank</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="shipment-type">Shipment Type</label>
+                                        <select id="shipment-type" required>
+                                            <option value="">Select Type</option>
+                                            <option value="Domestic">Domestic</option>
+                                            <option value="International">International</option>
+                                            <option value="Express">Express</option>
+                                            <option value="Standard">Standard</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-section">
+                                <h2><i class="fas fa-box"></i> Package Information</h2>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="contents">Contents</label>
+                                        <input type="text" id="contents" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="weight">Weight (kg)</label>
+                                        <input type="number" id="weight" step="0.1" required>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="departure-date">Departure Date</label>
+                                        <input type="date" id="departure-date" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="departure-time">Departure Time</label>
+                                        <input type="time" id="departure-time" required>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="pickup-date">Pick-up Date</label>
+                                        <input type="date" id="pickup-date" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="pickup-time">Pick-up Time</label>
+                                        <input type="time" id="pickup-time" required>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="expected-delivery">Expected Delivery Date</label>
+                                        <input type="date" id="expected-delivery" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="comments">Special Instructions</label>
+                                        <input type="text" id="comments">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <button type="submit" class="submit-btn">
+                                <i class="fas fa-plus-circle"></i> Generate Tracking Code
+                            </button>
+                        </form>
+                    </div>
+                    
+                    <div class="result-container" id="result-container">
+                        <h2><i class="fas fa-check-circle"></i> Shipment Created Successfully!</h2>
+                        <p>Your tracking code is:</p>
+                        <div class="tracking-code" id="tracking-code-display"></div>
+                        <button class="copy-btn" id="copy-btn">
+                            <i class="fas fa-copy"></i> Copy Tracking Code
+                        </button>
+                        <p class="instructions">
+                            Use this code to track your shipment on our website.<br>
+                            <a href="logistics.html#tracking" style="color: var(--secondary);">Go to the tracking page</a> or save your tracking code for future reference.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Manage Shipments Tab -->
+        <div class="tab-content" id="manage-tab">
+            <div class="shipment-list">
+                <div class="search-container">
+                    <h2><i class="fas fa-list"></i> All Shipments</h2>
+                    <input type="text" class="search-input" id="search-input" placeholder="Search by tracking code...">
+                </div>
+                <div id="shipments-container">
+                    <div class="empty-state">
+                        <i class="fas fa-box-open"></i>
+                        <h3>No shipments found</h3>
+                        <p>Create your first shipment to get started</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Back to Home Button -->
+    <a href="logistics.html" class="back-to-home" id="back-to-home">
+        <i class="fas fa-arrow-left"></i> Back to Home
+    </a>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script>
+        // Theme Toggle
+        const body = document.body;
+        const themeToggle = document.getElementById('theme-toggle');
+        
+        function toggleTheme() {
+            if (body.getAttribute('data-theme') === 'dark') {
+                body.removeAttribute('data-theme');
+                localStorage.setItem('theme', 'light');
+                themeToggle.innerHTML = '<i class="fas fa-moon"></i> Theme';
+            } else {
+                body.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+                themeToggle.innerHTML = '<i class="fas fa-sun"></i> Theme';
+            }
+        }
+        
+        themeToggle.addEventListener('click', toggleTheme);
+        
+        // Check for saved theme preference
+        if (localStorage.getItem('theme') === 'dark') {
+            body.setAttribute('data-theme', 'dark');
+            themeToggle.innerHTML = '<i class="fas fa-sun"></i> Theme';
+        }
+        
+        // Toggle password visibility
+        const togglePassword = document.getElementById('toggle-password');
+        const passwordInput = document.getElementById('password');
+        
+        togglePassword.addEventListener('click', function() {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            this.classList.toggle('fa-eye');
+            this.classList.toggle('fa-eye-slash');
+        });
+        
+        // Generate random 8-digit alphanumeric tracking code
+        function generateTrackingCode() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let result = '';
+            for (let i = 0; i < 8; i++) {
+                result += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return result;
+        }
+        
+        // Login functionality
+        const loginModal = document.getElementById('login-modal');
+        const loginForm = document.getElementById('login-form');
+        const loginError = document.getElementById('login-error');
+        const backToHome = document.getElementById('back-to-home');
+        const adminPanel = document.getElementById('admin-panel');
+        const logoutBtn = document.getElementById('logout-btn');
+
+        // Show login modal on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loginModal.classList.add('active');
+        });
+
+        // Handle login form submission
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const password = document.getElementById('password').value;
+            
+            // Check password (password: firstrank)
+            if (password === 'firstrank') {
+                // Show admin panel
+                adminPanel.style.display = 'block';
+                backToHome.style.display = 'flex';
+                loginModal.classList.remove('active');
+                loginError.style.display = 'none';
+            } else {
+                // Show error message
+                loginError.style.display = 'block';
+            }
+        });
+
+        // Logout functionality
+        logoutBtn.addEventListener('click', function() {
+            adminPanel.style.display = 'none';
+            backToHome.style.display = 'none';
+            loginModal.classList.add('active');
+            document.getElementById('password').value = '';
+        });
+
+        // Tab functionality
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const tabId = this.getAttribute('data-tab');
+                
+                tabBtns.forEach(b => b.classList.remove('active'));
+                tabContents.forEach(c => c.classList.remove('active'));
+                
+                this.classList.add('active');
+                document.getElementById(tabId + '-tab').classList.add('active');
+                
+                if (tabId === 'manage') {
+                    loadShipments();
+                }
+            });
+        });
+
+        // Shipment form submission
+        document.getElementById('shipment-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Generate tracking code
+            const trackingCode = generateTrackingCode();
+            
+            // Get current date and time
+            const now = new Date();
+            const createdAt = now.toISOString();
+            
+            // Calculate expected delivery date (3 days from now by default)
+            const expectedDeliveryDate = new Date(now);
+            expectedDeliveryDate.setDate(now.getDate() + 3);
+            const expectedDelivery = document.getElementById('expected-delivery').value || 
+                                   expectedDeliveryDate.toISOString().split('T')[0];
+            
+            // Get all form values
+            const shipmentData = {
+                shipper: {
+                    name: document.getElementById('shipper-name').value,
+                    email: document.getElementById('shipper-email').value,
+                    phone: document.getElementById('shipper-phone').value,
+                    address: document.getElementById('shipper-address').value
+                },
+                receiver: {
+                    name: document.getElementById('receiver-name').value,
+                    email: document.getElementById('receiver-email').value,
+                    phone: document.getElementById('receiver-phone').value,
+                    address: document.getElementById('receiver-address').value
+                },
+                shipment: {
+                    origin: document.getElementById('origin').value,
+                    destination: document.getElementById('destination').value,
+                    carrier: document.getElementById('carrier').value,
+                    type: document.getElementById('shipment-type').value
+                },
+                package: {
+                    contents: document.getElementById('contents').value,
+                    weight: document.getElementById('weight').value,
+                    departureDate: document.getElementById('departure-date').value,
+                    departureTime: document.getElementById('departure-time').value,
+                    pickupDate: document.getElementById('pickup-date').value,
+                    pickupTime: document.getElementById('pickup-time').value,
+                    expectedDelivery: expectedDelivery,
+                    comments: document.getElementById('comments').value
+                },
+                trackingCode: trackingCode,
+                status: "Order Received",
+                progress: 20,
+                createdAt: createdAt,
+                lastUpdated: createdAt,
+                updates: [
+                    {
+                        status: "Order Received",
+                        location: document.getElementById('origin').value,
+                        timestamp: createdAt,
+                        description: "Shipment information received and processed"
+                    }
+                ]
+            };
+            
+            // Save to localStorage
+            localStorage.setItem(`shipment_${trackingCode}`, JSON.stringify(shipmentData));
+            
+            // Also save to a shipments array if it exists, or create it
+            let shipments = JSON.parse(localStorage.getItem('shipments')) || [];
+            shipments.push(trackingCode);
+            localStorage.setItem('shipments', JSON.stringify(shipments));
+            
+            // Display the tracking code
+            document.getElementById('tracking-code-display').textContent = trackingCode;
+            document.getElementById('result-container').style.display = 'block';
+            
+            // Scroll to result
+            document.getElementById('result-container').scrollIntoView({ behavior: 'smooth' });
+            
+            // Clear form
+            document.getElementById('shipment-form').reset();
+        });
+
+        // Copy tracking code to clipboard
+        document.getElementById('copy-btn').addEventListener('click', function() {
+            const trackingCode = document.getElementById('tracking-code-display').textContent;
+            navigator.clipboard.writeText(trackingCode).then(() => {
+                this.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                setTimeout(() => {
+                    this.innerHTML = '<i class="fas fa-copy"></i> Copy Tracking Code';
+                }, 2000);
+            });
+        });
