@@ -768,4 +768,542 @@
             transition: var(--transition);
         }
 
+                .download-btn:hover {
+            background: #e55a00;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 107, 0, 0.3);
+        }
+
+        .download-btn i {
+            margin-right: 8px;
+        }
+
+        /* Contact Section */
+        .contact-container {
+            display: flex;
+            gap: 50px;
+            margin-top: 50px;
+        }
+
+        .contact-info {
+            flex: 1;
+        }
+
+        .contact-info h3 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+        }
+
+        .contact-info p {
+            margin-bottom: 30px;
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+
+        .contact-method {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .contact-method i {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 107, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            color: var(--secondary);
+        }
+
+        .contact-method div h4 {
+            color: var(--text-color);
+            margin-bottom: 5px;
+        }
+
+        .contact-method div p {
+            margin-bottom: 0;
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+
+        .contact-form {
+            flex: 1;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .contact-form h3 {
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            background: var(--card-bg);
+            color: var(--text-color);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px rgba(255, 107, 0, 0.2);
+            outline: none;
+        }
+
+        .form-group textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--dark);
+            padding: 40px 10%;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+            margin-top: var(--section-gap);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-logo {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px 30px;
+            margin: 20px 0;
+        }
+
+        .footer-links a {
+            color: #adb5bd;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--secondary);
+        }
+
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .social-icons a {
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: white;
+            font-size: 1.2rem;
+            transition: var(--transition);
+        }
+
+        .social-icons a:hover {
+            background: var(--secondary);
+            transform: translateY(-5px);
+        }
+
+        .copyright {
+            color: #adb5bd;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        /* Tawk.to Chat Widget Styling */
+        .tawk-button-circle {
+            background-color: var(--primary) !important;
+            border-color: var(--primary) !important;
+        }
+
+        .tawk-button-circle:hover {
+            background-color: var(--secondary) !important;
+            border-color: var(--secondary) !important;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .about-content {
+                flex-direction: column;
+            }
+            
+            .about-visual {
+                width: 100%;
+                height: 300px;
+            }
+            
+            .contact-container {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .hero-content {
+                max-width: 100%;
+                text-align: center;
+            }
+            
+            #canvas-container {
+                display: none;
+            }
+            
+            .detail-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav ul {
+                display: none;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .utility-controls {
+                display: none;
+            }
+            
+            .mobile-menu .utility-controls {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+                margin-top: 20px;
+                padding-top: 20px;
+                border-top: 1px solid rgba(0, 0, 0, 0.1);
+            }
+            
+            .mobile-menu .theme-toggle, 
+            .mobile-menu .language-selector {
+                background: rgba(255, 255, 255, 0.1);
+            }
+            
+            section {
+                padding: 100px 5% 60px;
+            }
+            
+            .tracking-container {
+                padding: 30px 20px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .tracking-details {
+                grid-template-columns: 1fr;
+            }
+            
+            .input-group {
+                flex-direction: column;
+            }
+            
+            .input-group button {
+                width: 100%;
+                margin-top: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Main Application -->
+    <div id="main-app">
+        <header>
+            <div class="logo">
+                <i class="fas fa-shipping-fast"></i>
+                <span>First Rank Parcel</span>
+            </div>
+            
+            <nav>
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#services">Services</a></li>
+                    <li><a href="#tracking">Tracking</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+                
+                <div class="utility-controls">
+                    <button class="theme-toggle" id="theme-toggle">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <div class="language-selector">
+                        <select id="language-select">
+                            <option value="en">English</option>
+                            <option value="es">Spanish</option>
+                            <option value="fr">French</option>
+                            <option value="ar">Arabic</option>
+                            <option value="zh">Chinese</option>
+                        </select>
+                    </div>
+                    <a href="#tracking" class="btn">Track</a>
+                </div>
+            </nav>
+            
+            <button class="mobile-menu-btn" id="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </button>
+        </header>
         
+        <div class="mobile-menu" id="mobile-menu">
+            <button class="mobile-menu-close" id="mobile-menu-close">
+                <i class="fas fa-times"></i>
+            </button>
+            <ul>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#services">Services</a></li>
+                <li><a href="#tracking">Tracking</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            
+            <div class="utility-controls">
+                <button class="theme-toggle" id="mobile-theme-toggle">
+                    <i class="fas fa-moon"></i> Dark Mode
+                </button>
+                <div class="language-selector">
+                    <select id="mobile-language-select">
+                        <option value="en">English</option>
+                        <option value="es">Spanish</option>
+                        <option value="fr">French</option>
+                        <option value="ar">Arabic</option>
+                        <option value="zh">Chinese</option>
+                    </select>
+                </div>
+                <a href="#tracking" class="btn">Track Shipment</a>
+            </div>
+        </div>
+
+        <section id="home" class="section">
+            <div class="container">
+                <div class="hero-content">
+                    <h1>Worldwide <span>Logistics</span> & Shipping Solutions</h1>
+                    <p>Delivering excellence across the globe with real-time tracking and premium logistics services. Trust us to handle your shipments with care and precision.</p>
+                    <a href="#services" class="btn">Our Services</a>
+                    
+                    <div class="tracking-form floating">
+                        <h3>Track Your Shipment</h3>
+                        <div class="input-group">
+                            <input type="text" id="tracking-input" placeholder="Enter your 8-digit tracking code">
+                            <button class="btn" id="track-btn">Track</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="canvas-container"></div>
+        </section>
+
+        <section id="about" class="section">
+            <div class="container">
+                <h2 class="section-title">About Us</h2>
+                <p class="section-subtitle">With over 20 years of experience, we provide reliable and efficient logistics solutions to businesses and individuals worldwide.</p>
+                
+                <div class="about-content">
+                    <div class="about-text">
+                        <h3>Your Trusted Global Logistics Partner</h3>
+                        <p>First Rank Parcel Service is a premier provider of transportation and supply chain management solutions. We specialize in delivering time-sensitive shipments through our extensive global network.</p>
+                        <p>Our commitment to innovation and customer service has made us a leader in the logistics industry, serving clients in over 150 countries with customized solutions.</p>
+                        
+                        <div class="stats">
+                            <div class="stat-box">
+                                <h4>150+</h4>
+                                <p>Countries Served</p>
+                            </div>
+                            <div class="stat-box">
+                                <h4>25M+</h4>
+                                <p>Annual Shipments</p>
+                            </div>
+                            <div class="stat-box">
+                                <h4>98.7%</h4>
+                                <p>On-Time Delivery</p>
+                            </div>
+                            <div class="stat-box">
+                                <h4>24/7</h4>
+                                <p>Customer Support</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="about-visual">
+                        <div class="carousel">
+                            <div class="carousel-inner" id="carousel-inner">
+                                <div class="carousel-item" style="background-image: url('https://images.unsplash.com/photo-1450101499163-c8848c66ca85?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80')"></div>
+                                <div class="carousel-item" style="background-image: url('https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80')"></div>
+                                <div class="carousel-item" style="background-image: url('https://images.unsplash.com/photo-1520523839897-bd0b52f945a0?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80')"></div>
+                                <div class="carousel-item" style="background-image: url('https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80')"></div>
+                            </div>
+                            <button class="carousel-control prev" id="carousel-prev">&#10094;</button>
+                            <button class="carousel-control next" id="carousel-next">&#10095;</button>
+                            <div class="carousel-indicators" id="carousel-indicators">
+                                <button class="carousel-indicator active"></button>
+                                <button class="carousel-indicator"></button>
+                                <button class="carousel-indicator"></button>
+                                <button class="carousel-indicator"></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="services" class="section">
+            <div class="container">
+                <h2 class="section-title">Our Services</h2>
+                <p class="section-subtitle">We offer comprehensive logistics solutions tailored to meet your specific shipping requirements.</p>
+                
+                <div class="services-grid">
+                    <div class="service-card">
+                        <i class="fas fa-plane"></i>
+                        <h3>Air Freight</h3>
+                        <p>Fast and reliable air cargo services for time-sensitive shipments across the globe.</p>
+                    </div>
+                    
+                    <div class="service-card">
+                        <i class="fas fa-ship"></i>
+                        <h3>Ocean Freight</h3>
+                        <p>Cost-effective sea freight solutions for large volume shipments with flexible options.</p>
+                    </div>
+                    
+                    <div class="service-card">
+                        <i class="fas fa-truck"></i>
+                        <h3>Ground Shipping</h3>
+                        <p>Efficient road transportation services with real-time tracking for domestic shipments.</p>
+                    </div>
+                    
+                    <div class="service-card">
+                        <i class="fas fa-warehouse"></i>
+                        <h3>Warehousing</h3>
+                        <p>Secure storage solutions with inventory management and distribution services.</p>
+                    </div>
+                    
+                    <div class="service-card">
+                        <i class="fas fa-box-open"></i>
+                        <h3>Packaging Solutions</h3>
+                        <p>Custom packaging services to ensure your items are protected during transit.</p>
+                    </div>
+                    
+                    <div class="service-card">
+                        <i class="fas fa-globe-americas"></i>
+                        <h3>International Express</h3>
+                        <p>Priority international delivery services with customs clearance assistance.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="tracking" class="section">
+            <div class="container">
+                <h2 class="section-title">Track Your Shipment</h2>
+                <p class="section-subtitle">
+                    Enter your 8-digit tracking code to get real-time updates on your shipment's status.
+                </p>
+            
+                <div class="tracking-container">
+                    <div class="input-group">
+                        <input type="text" id="tracking-input-2" placeholder="Enter your 8-digit tracking code">
+                        <button class="btn" id="track-btn-2">Track</button>
+                    </div>
+                    
+                    <div class="tracking-result" id="tracking-result">
+                        <h3>Shipment Status: <span id="status-text">In Transit</span></h3>
+                        <p>Tracking Number: <strong id="tracking-number-display">FR12345678</strong></p>
+                        
+                        <div class="status-bar">
+                            <div class="status-progress" id="status-progress"></div>
+                        </div>
+                        
+                        <div class="status-steps">
+                            <div class="status-step active">
+                                <div class="dot"></div>
+                                <div class="label">Order Received</div>
+                            </div>
+                            <div class="status-step active">
+                                <div class="dot"></div>
+                                <div class="label">Processing</div>
+                            </div>
+                            <div class="status-step active">
+                                <div class="dot"></div>
+                                <div class="label">In Transit</div>
+                            </div>
+                            <div class="status-step">
+                                <div class="dot"></div>
+                                <div class="label">Out for Delivery</div>
+                            </div>
+                            <div class="status-step">
+                                <div class="dot"></div>
+                                <div class="label">Delivered</div>
+                            </div>
+                        </div>
+                        
+                        <div class="detail-grid">
+                            <!-- Shipper Information -->
+                            <div class="detail-group" data-group="shipper">
+                                <h3>Shipper Information</h3>
+                                <div class="detail-item">
+                                    <strong>Name</strong>
+                         
