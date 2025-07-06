@@ -2054,7 +2054,7 @@ yh<!DOCTYPE html>
                 }
             });
             
-            // Update shipper information
+           // Update shipper information
             document.querySelector('[data-shipper="name"]').textContent = shipmentData.shipper.name;
             document.querySelector('[data-shipper="address"]').textContent = shipmentData.shipper.address;
             document.querySelector('[data-shipper="phone"]').textContent = shipmentData.shipper.phone;
@@ -2068,4 +2068,186 @@ yh<!DOCTYPE html>
             
             // Update shipment information
             document.querySelector('[data-shipment="origin"]').textContent = shipmentData.shipment.origin;
-            document.querySelector('[data-shipment="destination"]').textC
+            document.querySelector('[data-shipment="destination"]').textContent = shipmentData.shipment.destination;
+            document.querySelector('[data-shipment="carrier"]').textContent = shipmentData.shipment.carrier;
+            document.querySelector('[data-shipment="type"]').textContent = shipmentData.shipment.type;
+            
+            // Update package details
+            document.querySelector('[data-package="contents"]').textContent = shipmentData.package.contents;
+            document.querySelector('[data-package="weight"]').textContent = shipmentData.package.weight + ' kg';
+            document.querySelector('[data-package="status"]').textContent = shipmentData.status;
+            document.querySelector('[data-package="expectedDelivery"]').textContent = shipmentData.package.expectedDelivery;
+            document.querySelector('[data-package="departureTime"]').textContent = `${shipmentData.package.departureDate} ${shipmentData.package.departureTime}`;
+            document.querySelector('[data-package="pickupDate"]').textContent = shipmentData.package.pickupDate;
+            document.querySelector('[data-package="pickupTime"]').textContent = shipmentData.package.pickupTime;
+            document.querySelector('[data-package="comments"]').textContent = shipmentData.package.comments || 'No special instructions';
+            
+            // Show the tracking result
+            trackingResult.classList.add('active');
+        }
+        
+        // Check for tracking code in URL
+        function checkUrlForTrackingCode() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const trackingCode = urlParams.get('tracking');
+            
+            if (trackingCode) {
+                // Auto-fill and submit the tracking form
+                document.getElementById('tracking-input-2').value = trackingCode;
+                document.getElementById('track-btn-2').click();
+            }
+        }
+        
+        // Smooth scrolling for navigation
+        function setupSmoothScrolling() {
+            document.querySelectorAll('nav a, .mobile-menu a').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    if (this.getAttribute('href').startsWith('#')) {
+                        e.preventDefault();
+                        const targetId = this.getAttribute('href');
+                        document.querySelector(targetId).scrollIntoView({
+                            behavior: 'smooth'
+                        });
+                        
+                        // Close mobile menu if open
+                        const mobileMenu = document.getElementById('mobile-menu');
+                        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+                        
+                        mobileMenu.classList.remove('active');
+                        mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+                    }
+                });
+            });
+        }
+        
+        // Update copyright year
+        function updateCopyrightYear() {
+            document.getElementById('current-year').textContent = new Date().getFullYear();
+        }
+        
+        // Set up PDF download button
+        function setupPdfDownload() {
+            document.getElementById('download-receipt').addEventListener('click', function(e) {
+                e.preventDefault();
+                generatePdfReceipt();
+            });
+        }
+        
+        // Generate PDF receipt
+        function generatePdfReceipt() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            const trackingNumber = document.getElementById('tracking-number-display').textContent;
+            
+            // Add logo
+            doc.setFontSize(24);
+            doc.setTextColor(0, 102, 204);
+            doc.setFont('helvetica', 'bold');
+            doc.text('First Rank Parcel Service', 105, 20, null, null, 'center');
+            
+            doc.setFontSize(12);
+            doc.setTextColor(127, 140, 141);
+            doc.setFont('helvetica', 'normal');
+            doc.text('Shipment Receipt', 105, 28, null, null, 'center');
+            
+            // Add tracking info
+            doc.setDrawColor(255, 107, 0);
+            doc.setLineWidth(0.5);
+            doc.line(20, 35, 190, 35);
+            
+            doc.setFontSize(14);
+            doc.setTextColor(26, 42, 58);
+            doc.text('Tracking Information', 20, 45);
+            
+            doc.setFontSize(12);
+            doc.setTextColor(108, 117, 125);
+            doc.text(`Tracking Number: ${trackingNumber}`, 20, 55);
+            doc.text('Status: In Transit', 20, 62);
+            doc.text('Origin: New York, USA', 20, 69);
+            doc.text('Destination: London, UK', 20, 76);
+            doc.text('Estimated Delivery: August 29, 2025', 20, 83);
+            doc.text('Last Update: June 20, 2025 14:30 GMT', 20, 90);
+            
+            // Add progress bar
+            doc.setFillColor(40, 167, 69);
+            doc.rect(20, 100, 100, 8, 'F');
+            doc.setFillColor(189, 195, 199);
+            doc.rect(120, 100, 50, 8, 'F');
+            
+            doc.setFontSize(10);
+            doc.setTextColor(26, 42, 58);
+            doc.text('Progress: 60%', 20, 115);
+            
+            // Add timeline
+            doc.setFontSize(11);
+            doc.text('✓ Order Received', 20, 130);
+            doc.text('✓ Processing', 50, 130);
+            doc.text('✓ In Transit', 90, 130);
+            doc.text('Out for Delivery', 130, 130);
+            doc.text('Delivered', 170, 130);
+            
+            // Add shipper information
+            doc.setFontSize(14);
+            doc.setTextColor(26, 42, 58);
+            doc.text('Shipper Information', 20, 150);
+            
+            doc.setFontSize(12);
+            doc.setTextColor(108, 117, 125);
+            doc.text('Name: Individual Development Account program (IDA)', 20, 160);
+            doc.text('Address: 11 sangcredo street', 20, 167);
+            doc.text('Phone: 19056558297', 20, 174);
+            doc.text('Email: shoppingmals@gmail.com', 20, 181);
+            
+            // Add receiver information
+            doc.setFontSize(14);
+            doc.setTextColor(26, 42, 58);
+            doc.text('Receiver Information', 20, 195);
+            
+            doc.setFontSize(12);
+            doc.setTextColor(108, 117, 125);
+            doc.text('Name: Jason Boume', 20, 205);
+            doc.text('Address: 11 baracks street, bocija, Texas, USA', 20, 212);
+            doc.text('Phone: +1234567890', 20, 219);
+            doc.text('Email: buyer@gmail.com', 20, 226);
+            
+            // Add footer
+            doc.setDrawColor(236, 240, 241);
+            doc.setLineWidth(0.5);
+            doc.line(20, 250, 190, 250);
+            
+            doc.setFontSize(10);
+            doc.setTextColor(108, 117, 125);
+            doc.text('First Rank Parcel Service - frankparcelservice@gmail.com', 105, 255, null, null, 'center');
+            doc.text('© 2025 First Rank Parcel Service. All rights reserved.', 105, 260, null, null, 'center');
+            
+            // Save the PDF
+            doc.save(`FirstRankParcel-Shipment-${trackingNumber}.pdf`);
+        }
+    </script>
+    
+    <!-- Tawk.to Chat Widget with Custom Styling -->
+    <script type="text/javascript">
+        var Tawk_API = Tawk_API || {}, Tawk_LoadStart = new Date();
+        (function(){
+            var s1 = document.createElement("script"), s0 = document.getElementsByTagName("script")[0];
+            s1.async = true;
+            s1.src = 'https://embed.tawk.to/686a8883be8a1b1910b8507b/default';
+            s1.charset = 'UTF-8';
+            s1.setAttribute('crossorigin', '*');
+            s0.parentNode.insertBefore(s1, s0);
+            
+            // Customize the widget appearance
+            Tawk_API.onLoad = function(){
+                Tawk_API.setAttributes({
+                    'theme' : 'light',
+                    'color' : '#0066cc', // Primary color
+                    'highlight' : '#ff6b00', // Secondary color
+                    'bubble' : true,
+                    'hideOnLoad' : false
+                }, function(error){});
+            };
+        })();
+    </script>
+</body>
+</html>
