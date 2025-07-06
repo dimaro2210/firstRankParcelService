@@ -1737,7 +1737,7 @@ yh<!DOCTYPE html>
             });
         }
         
-        // Language Selector
+         // Language Selector
         function setupLanguageSelector() {
             const languageSelect = document.getElementById('language-select');
             const mobileLanguageSelect = document.getElementById('mobile-language-select');
@@ -1746,4 +1746,326 @@ yh<!DOCTYPE html>
             const translations = {
                 en: {
                     home: "Home",
-                  
+                    about: "About",
+                    services: "Services",
+                    tracking: "Tracking",
+                    contact: "Contact",
+                    trackBtn: "Track",
+                    darkMode: "Dark Mode",
+                    lightMode: "Light Mode",
+                    heroTitle: "Worldwide <span>Logistics</span> & Shipping Solutions",
+                    heroText: "Delivering excellence across the globe with real-time tracking and premium logistics services. Trust us to handle your shipments with care and precision.",
+                    ourServices: "Our Services",
+                    trackFormTitle: "Track Your Shipment",
+                    trackPlaceholder: "Enter your 8-digit tracking code",
+                    aboutTitle: "About Us",
+                    aboutSubtitle: "With over 20 years of experience, we provide reliable and efficient logistics solutions to businesses and individuals worldwide.",
+                    aboutHeading: "Your Trusted Global Logistics Partner",
+                    aboutText1: "First Rank Parcel Service is a premier provider of transportation and supply chain management solutions. We specialize in delivering time-sensitive shipments through our extensive global network.",
+                    aboutText2: "Our commitment to innovation and customer service has made us a leader in the logistics industry, serving clients in over 150 countries with customized solutions.",
+                    servicesTitle: "Our Services",
+                    servicesSubtitle: "We offer comprehensive logistics solutions tailored to meet your specific shipping requirements.",
+                    trackingTitle: "Track Your Shipment",
+                    trackingSubtitle: "Enter your 8-digit tracking code to get real-time updates on your shipment's status.",
+                    contactTitle: "Contact Us",
+                    contactSubtitle: "Have questions? Our team is ready to assist you with all your shipping needs.",
+                    contactHeading: "Get In Touch",
+                    contactText: "We're here to answer any questions you may have about our services. Reach out to us and we'll respond as soon as we can.",
+                    sendMessage: "Send Message",
+                    footerText: "Delivering excellence worldwide with innovative logistics solutions and unparalleled customer service.",
+                    privacy: "Privacy Policy",
+                    terms: "Terms of Service"
+                },
+                es: {
+                    home: "Inicio",
+                    about: "Sobre Nosotros",
+                    services: "Servicios",
+                    tracking: "Seguimiento",
+                    contact: "Contacto",
+                    trackBtn: "Rastrear",
+                    darkMode: "Modo Oscuro",
+                    lightMode: "Modo Claro",
+                    heroTitle: "Soluciones de <span>Logística</span> y Envío Mundial",
+                    heroText: "Entregando excelencia en todo el mundo con seguimiento en tiempo real y servicios logísticos premium. Confíe en nosotros para manejar sus envíos con cuidado y precisión.",
+                    ourServices: "Nuestros Servicios",
+                    trackFormTitle: "Rastrear Su Envío",
+                    trackPlaceholder: "Ingrese su código de seguimiento de 8 dígitos",
+                    aboutTitle: "Sobre Nosotros",
+                    aboutSubtitle: "Con más de 20 años de experiencia, proporcionamos soluciones logísticas confiables y eficientes para empresas e individuos en todo el mundo.",
+                    aboutHeading: "Su Socio de Logística Global de Confianza",
+                    aboutText1: "First Rank Parcel Service es un proveedor líder de soluciones de transporte y gestión de la cadena de suministro. Nos especializamos en la entrega de envíos urgentes a través de nuestra extensa red global.",
+                    aboutText2: "Nuestro compromiso con la innovación y el servicio al cliente nos ha convertido en líderes en la industria logística, atendiendo a clientes en más de 150 países con soluciones personalizadas.",
+                    servicesTitle: "Nuestros Servicios",
+                    servicesSubtitle: "Ofrecemos soluciones logísticas integrales adaptadas a sus requisitos de envío específicos.",
+                    trackingTitle: "Rastrear Su Envío",
+                    trackingSubtitle: "Ingrese su código de seguimiento de 8 dígitos para obtener actualizaciones en tiempo real sobre el estado de su envío.",
+                    contactTitle: "Contáctenos",
+                    contactSubtitle: "¿Tiene preguntas? Nuestro equipo está listo para ayudarlo con todas sus necesidades de envío.",
+                    contactHeading: "Póngase en Contacto",
+                    contactText: "Estamos aquí para responder cualquier pregunta que pueda tener sobre nuestros servicios. Comuníquese con nosotros y le responderemos lo antes posible.",
+                    sendMessage: "Enviar Mensaje",
+                    footerText: "Entregando excelencia en todo el mundo con soluciones logísticas innovadoras y un servicio al cliente incomparable.",
+                    privacy: "Política de Privacidad",
+                    terms: "Términos de Servicio"
+                },
+                fr: {
+                    home: "Accueil",
+                    about: "À Propos",
+                    services: "Services",
+                    tracking: "Suivi",
+                    contact: "Contact",
+                    trackBtn: "Suivre",
+                    darkMode: "Mode Sombre",
+                    lightMode: "Mode Clair",
+                    heroTitle: "Solutions de <span>Logistique</span> et d'Expédition Mondiale",
+                    heroText: "Livrer l'excellence à travers le monde avec un suivi en temps réel et des services logistiques premium. Faites-nous confiance pour gérer vos expéditions avec soin et précision.",
+                    ourServices: "Nos Services",
+                    trackFormTitle: "Suivre Votre Expédition",
+                    trackPlaceholder: "Entrez votre code de suivi à 8 chiffres",
+                    aboutTitle: "À Propos de Nous",
+                    aboutSubtitle: "Avec plus de 20 ans d'expérience, nous fournissons des solutions logistiques fiables et efficaces aux entreprises et aux particuliers du monde entier.",
+                    aboutHeading: "Votre Partenaire Logistique Mondial de Confiance",
+                    aboutText1: "First Rank Parcel Service est un fournisseur de premier plan de solutions de transport et de gestion de la chaîne d'approvisionnement. Nous nous spécialisons dans la livraison d'expéditions urgentes grâce à notre vaste réseau mondial.",
+                    aboutText2: "Notre engagement envers l'innovation et le service client nous a permis de devenir un leader dans l'industrie logistique, desservant des clients dans plus de 150 pays avec des solutions personnalisées.",
+                    servicesTitle: "Nos Services",
+                    servicesSubtitle: "Nous proposons des solutions logistiques complètes adaptées à vos besoins d'expédition spécifiques.",
+                    trackingTitle: "Suivre Votre Expédition",
+                    trackingSubtitle: "Entrez votre code de suivi à 8 chiffres pour obtenir des mises à jour en temps réel sur l'état de votre expédition.",
+                    contactTitle: "Contactez-Nous",
+                    contactSubtitle: "Vous avez des questions ? Notre équipe est prête à vous aider pour tous vos besoins d'expédition.",
+                    contactHeading: "Entrer en Contact",
+                    contactText: "Nous sommes là pour répondre à toutes vos questions sur nos services. Contactez-nous et nous vous répondrons dès que possible.",
+                    sendMessage: "Envoyer un Message",
+                    footerText: "Livrer l'excellence dans le monde entier avec des solutions logistiques innovantes et un service client inégalé.",
+                    privacy: "Politique de Confidentialité",
+                    terms: "Conditions de Service"
+                },
+                ar: {
+                    home: "الرئيسية",
+                    about: "من نحن",
+                    services: "الخدمات",
+                    tracking: "تتبع",
+                    contact: "اتصل بنا",
+                    trackBtn: "تتبع",
+                    darkMode: "الوضع المظلم",
+                    lightMode: "الوضع الفاتح",
+                    heroTitle: "حلول <span>اللوجستيات</span> والشحن العالمية",
+                    heroText: "نقدم التميز في جميع أنحاء العالم مع تتبع في الوقت الحقيقي وخدمات لوجستية متميزة. ثق بنا للتعامل مع شحناتك بعناية ودقة.",
+                    ourServices: "خدماتنا",
+                    trackFormTitle: "تتبع شحنتك",
+                    trackPlaceholder: "أدخل رمز التتبع المكون من 8 أرقام",
+                    aboutTitle: "من نحن",
+                    aboutSubtitle: "مع أكثر من 20 عامًا من الخبرة، نقدم حلول لوجستية موثوقة وفعالة للشركات والأفراد في جميع أنحاء العالم.",
+                    aboutHeading: "شريكك الموثوق في الخدمات اللوجستية العالمية",
+                    aboutText1: "First Rank Parcel Service هي مزود رائد لحلول النقل وإدارة سلسلة التوريد. نحن متخصصون في تسليم الشحنات الحساسة للوقت من خلال شبكتنا العالمية الواسعة.",
+                    aboutText2: "التزامنا بالابتكار وخدمة العملاء جعلنا قادة في صناعة الخدمات اللوجستية، حيث نخدم العملاء في أكثر من 150 دولة بحلول مخصصة.",
+                    servicesTitle: "خدماتنا",
+                    servicesSubtitle: "نقدم حلول لوجستية شاملة مصممة لتلبية متطلبات الشحن الخاصة بك.",
+                    trackingTitle: "تتبع شحنتك",
+                    trackingSubtitle: "أدخل رمز التتبع المكون من 8 أرقام للحصول على تحديثات في الوقت الفعلي حول حالة شحنتك.",
+                    contactTitle: "اتصل بنا",
+                    contactSubtitle: "هل لديك أسئلة؟ فريقنا جاهز لمساعدتك في جميع احتياجات الشحن الخاصة بك.",
+                    contactHeading: "تواصل معنا",
+                    contactText: "نحن هنا للإجابة على أي أسئلة قد تكون لديكم حول خدماتنا. تواصلوا معنا وسنرد عليكم في أقرب وقت ممكن.",
+                    sendMessage: "إرسال رسالة",
+                    footerText: "تقديم التميز في جميع أنحاء العالم مع حلول لوجستية مبتكرة وخدمة عملاء لا مثيل لها.",
+                    privacy: "سياسة الخصوصية",
+                    terms: "شروط الخدمة"
+                },
+                zh: {
+                    home: "首页",
+                    about: "关于我们",
+                    services: "服务",
+                    tracking: "追踪",
+                    contact: "联系我们",
+                    trackBtn: "追踪",
+                    darkMode: "暗黑模式",
+                    lightMode: "明亮模式",
+                    heroTitle: "全球<span>物流</span>与运输解决方案",
+                    heroText: "通过实时跟踪和优质物流服务在全球范围内提供卓越服务。相信我们能以细心和精确处理您的货物。",
+                    ourServices: "我们的服务",
+                    trackFormTitle: "追踪您的货物",
+                    trackPlaceholder: "输入您的8位追踪码",
+                    aboutTitle: "关于我们",
+                    aboutSubtitle: "凭借20多年的经验，我们为全球企业和个人提供可靠高效的物流解决方案。",
+                    aboutHeading: "您值得信赖的全球物流合作伙伴",
+                    aboutText1: "First Rank Parcel Service是运输和供应链管理解决方案的领先提供商。我们专注于通过我们广泛的全球网络交付时间敏感的货物。",
+                    aboutText2: "我们对创新和客户服务的承诺使我们成为物流行业的领导者，为150多个国家的客户提供定制解决方案。",
+                    servicesTitle: "我们的服务",
+                    servicesSubtitle: "我们提供全面的物流解决方案，以满足您的特定运输需求。",
+                    trackingTitle: "追踪您的货物",
+                    trackingSubtitle: "输入您的8位追踪码以获取货物状态的实时更新。",
+                    contactTitle: "联系我们",
+                    contactSubtitle: "有问题吗？我们的团队随时准备帮助您解决所有运输需求。",
+                    contactHeading: "取得联系",
+                    contactText: "我们在这里回答您可能对我们的服务提出的任何问题。联系我们，我们将尽快回复您。",
+                    sendMessage: "发送消息",
+                    footerText: "通过创新的物流解决方案和无与伦比的客户服务在全球范围内提供卓越服务。",
+                    privacy: "隐私政策",
+                    terms: "服务条款"
+                }
+            };
+            
+            function changeLanguage(lang) {
+                // Update all text elements with translations
+                const elements = document.querySelectorAll('[data-translate]');
+                elements.forEach(el => {
+                    const key = el.getAttribute('data-translate');
+                    if (translations[lang] && translations[lang][key]) {
+                        if (key === 'heroTitle') {
+                            el.innerHTML = translations[lang][key];
+                        } else {
+                            el.textContent = translations[lang][key];
+                        }
+                    }
+                });
+                
+                // Update placeholders
+                document.querySelectorAll('#tracking-input, #tracking-input-2').forEach(input => {
+                    input.placeholder = translations[lang]['trackPlaceholder'];
+                });
+                
+                // Update mobile theme toggle text
+                const body = document.body;
+                const mobileThemeToggle = document.getElementById('mobile-theme-toggle');
+                
+                if (body.getAttribute('data-theme') === 'dark') {
+                    mobileThemeToggle.innerHTML = `<i class="fas fa-sun"></i> ${translations[lang]['lightMode']}`;
+                } else {
+                    mobileThemeToggle.innerHTML = `<i class="fas fa-moon"></i> ${translations[lang]['darkMode']}`;
+                }
+                
+                localStorage.setItem('language', lang);
+            }
+            
+            // Check for saved language preference
+            const savedLang = localStorage.getItem('language') || 'en';
+            languageSelect.value = savedLang;
+            mobileLanguageSelect.value = savedLang;
+            changeLanguage(savedLang);
+            
+            languageSelect.addEventListener('change', function() {
+                changeLanguage(this.value);
+            });
+            
+            mobileLanguageSelect.addEventListener('change', function() {
+                changeLanguage(this.value);
+            });
+        }
+        
+        // Navbar Scroll Effect
+        function setupNavbarScroll() {
+            let lastScroll = 0;
+            const header = document.querySelector('header');
+            
+            window.addEventListener('scroll', () => {
+                const currentScroll = window.pageYOffset;
+                
+                if (currentScroll <= 0) {
+                    header.classList.remove('shrink');
+                    return;
+                }
+                
+                if (currentScroll > lastScroll && !header.classList.contains('shrink')) {
+                    header.classList.add('shrink');
+                } else if (currentScroll < lastScroll && header.classList.contains('shrink')) {
+                    header.classList.remove('shrink');
+                }
+                
+                lastScroll = currentScroll;
+            });
+        }
+        
+        // Scroll Animations
+        function setupScrollAnimations() {
+            gsap.registerPlugin(ScrollTrigger);
+            
+            // Animate sections
+            gsap.utils.toArray('section').forEach(section => {
+                ScrollTrigger.create({
+                    trigger: section,
+                    start: "top 80%",
+                    onEnter: () => section.classList.add('active')
+                });
+            });
+            
+            // Animate stats and service cards
+            gsap.utils.toArray('.stat-box, .service-card').forEach(item => {
+                ScrollTrigger.create({
+                    trigger: item,
+                    start: "top 80%",
+                    onEnter: () => item.classList.add('active')
+                });
+            });
+        }
+        
+        // Handle tracking form submission
+        function handleTrackingSubmission(inputId, btnId) {
+            const trackingInput = document.getElementById(inputId);
+            const trackBtn = document.getElementById(btnId);
+            
+            trackBtn.addEventListener('click', function() {
+                const trackingNumber = trackingInput.value.trim().toUpperCase();
+                
+                if (trackingNumber.length === 8) {
+                    // Retrieve shipment data from localStorage
+                    const shipmentData = JSON.parse(localStorage.getItem(`shipment_${trackingNumber}`));
+                    
+                    if (shipmentData) {
+                        displayTrackingInfo(shipmentData);
+                        
+                        // Scroll to tracking result if needed
+                        document.getElementById('tracking-result').scrollIntoView({ behavior: 'smooth' });
+                    } else {
+                        alert('No shipment found with that tracking number. Please check and try again.');
+                    }
+                } else {
+                    alert('Please enter a valid 8-character tracking code');
+                }
+            });
+            
+            // Also allow Enter key to submit
+            trackingInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    trackBtn.click();
+                }
+            });
+        }
+        
+        // Display tracking information
+        function displayTrackingInfo(shipmentData) {
+            const trackingResult = document.getElementById('tracking-result');
+            const statusText = document.getElementById('status-text');
+            const trackingNumberDisplay = document.getElementById('tracking-number-display');
+            const statusProgress = document.getElementById('status-progress');
+            const statusSteps = document.querySelectorAll('.status-step');
+            
+            // Update basic info
+            statusText.textContent = shipmentData.status;
+            trackingNumberDisplay.textContent = shipmentData.trackingCode;
+            statusProgress.style.width = `${shipmentData.progress}%`;
+            
+            // Update status steps based on progress
+            statusSteps.forEach((step, index) => {
+                if (index * 25 < shipmentData.progress) {
+                    step.classList.add('active');
+                } else {
+                    step.classList.remove('active');
+                }
+            });
+            
+            // Update shipper information
+            document.querySelector('[data-shipper="name"]').textContent = shipmentData.shipper.name;
+            document.querySelector('[data-shipper="address"]').textContent = shipmentData.shipper.address;
+            document.querySelector('[data-shipper="phone"]').textContent = shipmentData.shipper.phone;
+            document.querySelector('[data-shipper="email"]').textContent = shipmentData.shipper.email;
+            
+            // Update receiver information
+            document.querySelector('[data-receiver="name"]').textContent = shipmentData.receiver.name;
+            document.querySelector('[data-receiver="address"]').textContent = shipmentData.receiver.address;
+            document.querySelector('[data-receiver="phone"]').textContent = shipmentData.receiver.phone;
+            document.querySelector('[data-receiver="email"]').textContent = shipmentData.receiver.email;
+            
+            // Update shipment information
+            document.querySelector('[data-shipment="origin"]').textContent = shipmentData.shipment.origin;
+            document.querySelector('[data-shipment="destination"]').textC
