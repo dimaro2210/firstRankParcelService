@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+how<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -1091,7 +1091,136 @@
             shipmentData.status = newStatus;
             shipmentData.progress = statusMap[newStatus].progress;
             shipmentData.lastUpdated = new Date().toISOString();
-
             // Add new update
             shipmentData.updates.push({
-                st
+                status: newStatus,
+                location: newStatus === 'Delivered' ? shipmentData.shipment.destination : 'In Transit',
+                timestamp: shipmentData.lastUpdated,
+                description: statusMap[newStatus].description
+            });
+
+            localStorage.setItem(`shipment_${trackingCode}`, JSON.stringify(shipmentData));
+            loadShipments();
+        }
+
+        // Load and display shipments
+        function loadShipments() {
+            const shipmentsContainer = document.getElementById('shipments-container');
+            const shipments = JSON.parse(localStorage.getItem('shipments')) || [];
+            
+            if (shipments.length === 0) {
+                shipmentsContainer.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-box-open"></i>
+                        <h3>No shipments found</h3>
+                        <p>Create your first shipment to get started</p>
+                    </div>
+                `;
+                return;
+            }
+
+            let shipmentsHtml = '';
+            shipments.forEach(trackingCode => {
+                const shipmentData = JSON.parse(localStorage.getItem(`shipment_${trackingCode}`));
+                if (shipmentData) {
+                    shipmentsHtml += createShipmentCard(shipmentData);
+                }
+            });
+
+            shipmentsContainer.innerHTML = shipmentsHtml;
+        }
+
+        // Create shipment card HTML
+        function createShipmentCard(shipmentData) {
+            const statusClass = shipmentData.status.toLowerCase().replace(/\s+/g, '-');
+            return `
+                <div class="shipment-item">
+                    <div class="shipment-header">
+                        <div class="shipment-code">${shipmentData.trackingCode}</div>
+                        <div class="status-badge status-${statusClass}">${shipmentData.status}</div>
+                    </div>
+                    
+                    <div class="progress-container">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${shipmentData.progress}%"></div>
+                        </div>
+                        <small style="color: var(--text-color); opacity: 0.7;">${shipmentData.progress}% Complete</small>
+                    </div>
+                    
+                    <div class="shipment-details">
+                        <div class="detail-item">
+                            <div class="detail-label">From</div>
+                            <div class="detail-value">${shipmentData.shipper.name}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">To</div>
+                            <div class="detail-value">${shipmentData.receiver.name}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Origin</div>
+                            <div class="detail-value">${shipmentData.shipment.origin}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Destination</div>
+                            <div class="detail-value">${shipmentData.shipment.destination}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Contents</div>
+                            <div class="detail-value">${shipmentData.package.contents}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Weight</div>
+                            <div class="detail-value">${shipmentData.package.weight} kg</div>
+                        </div>
+                    </div>
+                    
+                    <div class="status-controls">
+                        <button class="status-btn btn-order" onclick="updateShipmentStatus('${shipmentData.trackingCode}', 'Order Received')">
+                            Order Received
+                        </button>
+                        <button class="status-btn btn-processing" onclick="updateShipmentStatus('${shipmentData.trackingCode}', 'Processing')">
+                            Processing
+                        </button>
+                        <button class="status-btn btn-transit" onclick="updateShipmentStatus('${shipmentData.trackingCode}', 'In Transit')">
+                            In Transit
+                        </button>
+                        <button class="status-btn btn-delivery" onclick="updateShipmentStatus('${shipmentData.trackingCode}', 'Out for Delivery')">
+                            Out for Delivery
+                        </button>
+                        <button class="status-btn btn-delivered" onclick="updateShipmentStatus('${shipmentData.trackingCode}', 'Delivered')">
+                            Delivered
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Search functionality
+        document.getElementById('search-input').addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const shipmentItems = document.querySelectorAll('.shipment-item');
+            
+            shipmentItems.forEach(item => {
+                const trackingCode = item.querySelector('.shipment-code').textContent.toLowerCase();
+                if (trackingCode.includes(searchTerm)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+
+        // Initialize on page load
+        window.addEventListener('load', function() {
+            // Check if already logged in (for development)
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('dev') === 'true') {
+                loginModal.classList.remove('active');
+                adminPanel.style.display = 'block';
+                backToHome.style.display = 'flex';
+                loadShipments();
+            }
+        });
+    </script>
+</body>
+</html>
