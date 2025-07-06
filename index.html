@@ -1627,11 +1627,7 @@
             });
         }
         
-        // PDF Receipt Generation
-        function generatePDFReceipt(trackingNumber) {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-            
+ 
             // Add logo
             doc.setFontSize(24);
             doc.setTextColor(0, 102, 204);
@@ -2114,11 +2110,6 @@
             document.querySelector('[data-package="pickupTime"]').textContent = shipmentData.package.pickupTime;
             document.querySelector('[data-package="comments"]').textContent = shipmentData.package.comments || 'No special instructions';
             
-            // Update PDF download link
-            document.getElementById('download-receipt').onclick = function(e) {
-                e.preventDefault();
-                generatePDFReceipt(shipmentData.trackingCode);
-            };
             
             // Show the tracking result
             trackingResult.classList.add('active');
@@ -2167,5 +2158,18 @@
             });
         });
     </script>
+    <!--Start of Tawk.to Script-->
+<script type="text/javascript">
+var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+(function(){
+var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+s1.async=true;
+s1.src='https://embed.tawk.to/686a8883be8a1b1910b8507b/default';
+s1.charset='UTF-8';
+s1.setAttribute('crossorigin','*');
+s0.parentNode.insertBefore(s1,s0);
+})();
+</script>
+<!--End of Tawk.to Script-->
 </body>
 </html>
