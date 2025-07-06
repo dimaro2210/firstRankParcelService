@@ -12,6 +12,8 @@
             --dark: #1a2a3a;
             --light: #f8f9fa;
             --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
             --bg-color: #f8f9fa;
             --text-color: #1a2a3a;
             --card-bg: #ffffff;
@@ -69,14 +71,27 @@
             position: relative;
         }
 
-        .login-container h2 {
+        .login-container h1 {
             color: var(--primary);
+            margin-bottom: 10px;
+            text-align: center;
+            font-size: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .login-container p {
+            color: var(--text-color);
             margin-bottom: 20px;
             text-align: center;
+            opacity: 0.8;
         }
 
         .login-form .form-group {
             margin-bottom: 20px;
+            position: relative;
         }
 
         .login-form label {
@@ -101,6 +116,15 @@
             outline: none;
         }
 
+        .toggle-password {
+            position: absolute;
+            right: 15px;
+            top: 38px;
+            cursor: pointer;
+            color: var(--text-color);
+            opacity: 0.7;
+        }
+
         .login-btn {
             background: var(--secondary);
             color: white;
@@ -111,6 +135,10 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
 
         .login-btn:hover {
@@ -118,10 +146,11 @@
         }
 
         .error-message {
-            color: #dc3545;
+            color: var(--danger);
             margin-top: 10px;
             text-align: center;
             display: none;
+            font-weight: 500;
         }
 
         .close-login {
@@ -133,6 +162,100 @@
             font-size: 1.2rem;
             cursor: pointer;
             color: var(--text-color);
+        }
+
+        /* Admin Panel Header */
+        .admin-header {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 20px 30px;
+            margin: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .admin-header h1 {
+            color: var(--primary);
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header-controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .theme-toggle, .logout-btn {
+            background: var(--secondary);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .theme-toggle:hover, .logout-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        .logout-btn {
+            background: var(--danger);
+        }
+
+        /* Admin Tabs */
+        .admin-tabs {
+            display: flex;
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 10px;
+            margin: 0 20px 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tab-btn.active {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .tab-btn:hover:not(.active) {
+            background: rgba(255, 107, 0, 0.1);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
         }
 
         /* Back to Home Button */
@@ -148,7 +271,9 @@
             font-weight: 600;
             z-index: 1000;
             box-shadow: 0 3px 10px rgba(255, 107, 0, 0.3);
-            display: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         /* Shipment Form Styles */
@@ -175,6 +300,9 @@
             margin-bottom: 15px;
             padding-bottom: 10px;
             border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .form-row {
@@ -235,6 +363,10 @@
             font-size: 1rem;
             display: block;
             margin: 30px auto 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
 
         .submit-btn:hover {
@@ -255,6 +387,10 @@
         .result-container h2 {
             color: var(--primary);
             margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
 
         .tracking-code {
@@ -283,10 +419,179 @@
             cursor: pointer;
             margin-top: 10px;
             transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
 
         .copy-btn:hover {
             background: #0056b3;
+        }
+
+        /* Shipment List Styles */
+        .shipment-list {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin: 20px;
+        }
+
+        .shipment-item {
+            background: var(--bg-color);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--secondary);
+            transition: all 0.3s ease;
+        }
+
+        .shipment-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .shipment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .shipment-code {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .status-badge {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-order-received { background: #e3f2fd; color: #1976d2; }
+        .status-processing { background: #fff3e0; color: #f57c00; }
+        .status-in-transit { background: #e8f5e8; color: #388e3c; }
+        .status-out-for-delivery { background: #fff8e1; color: #f9a825; }
+        .status-delivered { background: #e8f5e8; color: #2e7d32; }
+
+        .shipment-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .detail-label {
+            font-size: 0.85rem;
+            color: var(--text-color);
+            opacity: 0.7;
+            margin-bottom: 2px;
+        }
+
+        .detail-value {
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .status-controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .status-btn {
+            padding: 8px 15px;
+            border-radius: 5px;
+            border: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .status-btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .btn-order { background: #2196f3; color: white; }
+        .btn-processing { background: #ff9800; color: white; }
+        .btn-transit { background: #4caf50; color: white; }
+        .btn-delivery { background: #ffc107; color: black; }
+        .btn-delivered { background: #8bc34a; color: white; }
+
+        /* Progress Bar */
+        .progress-container {
+            margin: 20px 0;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 4px;
+            transition: width 0.8s ease;
+        }
+
+        /* Search Container */
+        .search-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .search-input {
+            width: 100%;
+            max-width: 400px;
+            padding: 12px 15px;
+            border-radius: 25px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: var(--card-bg);
+            color: var(--text-color);
+        }
+
+        .search-input:focus {
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px rgba(255, 107, 0, 0.2);
+            outline: none;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-color);
+            opacity: 0.6;
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            color: var(--secondary);
         }
 
         /* Responsive Design */
@@ -298,6 +603,34 @@
             .form-group {
                 min-width: 100%;
             }
+
+            .admin-header {
+                padding: 15px;
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .header-controls {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .admin-tabs {
+                flex-direction: column;
+            }
+
+            .tab-btn {
+                justify-content: center;
+            }
+
+            .shipment-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .status-controls {
+                justify-content: center;
+            }
         }
     </style>
 </head>
@@ -306,437 +639,73 @@
     <div class="login-modal" id="login-modal">
         <div class="login-container">
             <button class="close-login" id="close-login">&times;</button>
-            <h2>Admin Login</h2>
+            <h1><i class="fas fa-shield-alt"></i> Admin Access</h1>
+            <p>Enter your admin password to access the management panel</p>
             <form class="login-form" id="login-form">
                 <div class="form-group">
-                    <label for="password">Enter Admin Password</label>
-                    <input type="password" id="password" required>
+                    <label for="password">Password</label>
+                    <input type="password" id="password" required placeholder="Enter admin password">
+                    <i class="fas fa-eye toggle-password" id="toggle-password"></i>
                 </div>
-                <button type="submit" class="login-btn">Login</button>
-                <div class="error-message" id="login-error">Incorrect password. Only authorized personnel can access this page.</div>
+                <button type="submit" class="login-btn">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </button>
+                <div class="error-message" id="login-error">
+                    Incorrect password. Only authorized personnel can access this page.
+                </div>
             </form>
         </div>
     </div>
 
-    <!-- Back to Home Button -->
-    <a href="logistics.html" class="back-to-home" id="back-to-home">
-        <i class="fas fa-arrow-left"></i> Back to Home
-    </a>
-
-    <!-- Admin Shipment Form -->
-    <div id="shipment-form-container">
-        <div class="container">
-            <h1>Create New Shipment</h1>
-            
-            <div class="form-container">
-                <form id="shipment-form">
-                    <div class="form-section">
-                        <h2>Shipper Information</h2>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="shipper-name">Full Name</label>
-                                <input type="text" id="shipper-name" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="shipper-email">Email</label>
-                                <input type="email" id="shipper-email" required>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="shipper-phone">Phone Number</label>
-                                <input type="tel" id="shipper-phone" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="shipper-address">Address</label>
-                                <input type="text" id="shipper-address" required>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="form-section">
-                        <h2>Receiver Information</h2>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="receiver-name">Full Name</label>
-                                <input type="text" id="receiver-name" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="receiver-email">Email</label>
-                                <input type="email" id="receiver-email" required>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="receiver-phone">Phone Number</label>
-                                <input type="tel" id="receiver-phone" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="receiver-address">Address</label>
-                                <input type="text" id="receiver-address" required>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="form-section">
-                        <h2>Shipment Details</h2>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="origin">Origin Country</label>
-                                <input type="text" id="origin" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="destination">Destination Country</label>
-                                <input type="text" id="destination" required>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="carrier">Carrier</label>
-                                <select id="carrier" required>
-                                    <option value="">Select Carrier</option>
-                                    <option value="USPS">USPS</option>
-                                    <option value="FedEx">FedEx</option>
-                                    <option value="UPS">UPS</option>
-                                    <option value="DHL">DHL</option>
-                                    <option value="First Rank">First Rank</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="shipment-type">Shipment Type</label>
-                                <select id="shipment-type" required>
-                                    <option value="">Select Type</option>
-                                    <option value="Domestic">Domestic</option>
-                                    <option value="International">International</option>
-                                    <option value="Express">Express</option>
-                                    <option value="Standard">Standard</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="form-section">
-                        <h2>Package Information</h2>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="contents">Contents</label>
-                                <input type="text" id="contents" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="weight">Weight (kg)</label>
-                                <input type="number" id="weight" step="0.1" required>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="departure-date">Departure Date</label>
-                                <input type="date" id="departure-date" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="departure-time">Departure Time</label>
-                                <input type="time" id="departure-time" required>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="pickup-date">Pick-up Date</label>
-                                <input type="date" id="pickup-date" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="pickup-time">Pick-up Time</label>
-                                <input type="time" id="pickup-time" required>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="expected-delivery">Expected Delivery Date</label>
-                                <input type="date" id="expected-delivery" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="comments">Special Instructions</label>
-                                <input type="text" id="comments">
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <button type="submit" class="submit-btn">Generate Tracking Code</button>
-                </form>
-            </div>
-            
-            <div class="result-container" id="result-container">
-                <h2>Shipment Created Successfully!</h2>
-                <p>Your tracking code is:</p>
-                <div class="tracking-code" id="tracking-code-display"></div>
-                <button class="copy-btn" id="copy-btn">Copy Tracking Code</button>
-                <p class="instructions">
-                    Use this code to track your shipment on our website.<br>
-                    <a href="logistics.html#tracking" style="color: var(--secondary);">Go to the tracking page</a> or save your tracking code for future reference.
-                </p>
+    <!-- Admin Panel -->
+    <div id="admin-panel" style="display: none;">
+        <!-- Header -->
+        <div class="admin-header">
+            <h1>
+                <i class="fas fa-shipping-fast"></i>
+                First Rank Parcel Service - Admin Panel
+            </h1>
+            <div class="header-controls">
+                <button class="theme-toggle" id="theme-toggle">
+                    <i class="fas fa-moon"></i> Theme
+                </button>
+                <button class="logout-btn" id="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
             </div>
         </div>
-    </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script>
-        // Theme Toggle
-        const body = document.body;
-        
-        function toggleTheme() {
-            if (body.getAttribute('data-theme') === 'dark') {
-                body.removeAttribute('data-theme');
-                localStorage.setItem('theme', 'light');
-            } else {
-                body.setAttribute('data-theme', 'dark');
-                localStorage.setItem('theme', 'dark');
-            }
-        }
-        
-        // Check for saved theme preference
-        if (localStorage.getItem('theme') === 'dark') {
-            body.setAttribute('data-theme', 'dark');
-        }
-        
-        // Generate random 8-digit alphanumeric tracking code
-        function generateTrackingCode() {
-            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-            let result = '';
-            for (let i = 0; i < 8; i++) {
-                result += chars.charAt(Math.floor(Math.random() * chars.length));
-            }
-            return result;
-        }
-        
-        // PDF Receipt Generation
-        function generatePDFReceipt(trackingNumber) {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-            
-            // Add logo
-            doc.setFontSize(24);
-            doc.setTextColor(0, 102, 204);
-            doc.setFont('helvetica', 'bold');
-            doc.text('First Rank Parcel Service', 105, 20, null, null, 'center');
-            
-            doc.setFontSize(12);
-            doc.setTextColor(127, 140, 141);
-            doc.setFont('helvetica', 'normal');
-            doc.text('Shipment Receipt', 105, 28, null, null, 'center');
-            
-            // Add tracking info
-            doc.setDrawColor(255, 107, 0);
-            doc.setLineWidth(0.5);
-            doc.line(20, 35, 190, 35);
-            
-            doc.setFontSize(14);
-            doc.setTextColor(26, 42, 58);
-            doc.text('Tracking Information', 20, 45);
-            
-            doc.setFontSize(12);
-            doc.setTextColor(108, 117, 125);
-            doc.text(`Tracking Number: ${trackingNumber}`, 20, 55);
-            doc.text('Status: In Transit', 20, 62);
-            doc.text('Origin: New York, USA', 20, 69);
-            doc.text('Destination: London, UK', 20, 76);
-            doc.text('Estimated Delivery: August 29, 2025', 20, 83);
-            doc.text('Last Update: June 20, 2025 14:30 GMT', 20, 90);
-            
-            // Add progress bar
-            doc.setFillColor(40, 167, 69);
-            doc.rect(20, 100, 100, 8, 'F');
-            doc.setFillColor(189, 195, 199);
-            doc.rect(120, 100, 50, 8, 'F');
-            
-            doc.setFontSize(10);
-            doc.setTextColor(26, 42, 58);
-            doc.text('Progress: 60%', 20, 115);
-            
-            // Add timeline
-            doc.setFontSize(11);
-            doc.text('✓ Order Received', 20, 130);
-            doc.text('✓ Processing', 50, 130);
-            doc.text('✓ In Transit', 90, 130);
-            doc.text('Out for Delivery', 130, 130);
-            doc.text('Delivered', 170, 130);
-            
-            // Add shipper information
-            doc.setFontSize(14);
-            doc.setTextColor(26, 42, 58);
-            doc.text('Shipper Information', 20, 150);
-            
-            doc.setFontSize(12);
-            doc.setTextColor(108, 117, 125);
-            doc.text('Name: Individual Development Account program (IDA)', 20, 160);
-            doc.text('Address: 11 sangcredo street', 20, 167);
-            doc.text('Phone: 19056558297', 20, 174);
-            doc.text('Email: shoppingmals@gmail.com', 20, 181);
-            
-            // Add receiver information
-            doc.setFontSize(14);
-            doc.setTextColor(26, 42, 58);
-            doc.text('Receiver Information', 20, 195);
-            
-            doc.setFontSize(12);
-            doc.setTextColor(108, 117, 125);
-            doc.text('Name: Jason Boume', 20, 205);
-            doc.text('Address: 11 baracks street, bocija, Texas, USA', 20, 212);
-            doc.text('Phone: +1234567890', 20, 219);
-            doc.text('Email: buyer@gmail.com', 20, 226);
-            
-            // Add footer
-            doc.setDrawColor(236, 240, 241);
-            doc.setLineWidth(0.5);
-            doc.line(20, 250, 190, 250);
-            
-            doc.setFontSize(10);
-            doc.setTextColor(108, 117, 125);
-            doc.text('First Rank Parcel Service - frankparcelservice@gmail.com', 105, 255, null, null, 'center');
-            doc.text('© 2025 First Rank Parcel Service. All rights reserved.', 105, 260, null, null, 'center');
-            
-            // Save the PDF
-            doc.save(`FirstRankParcel-Shipment-${trackingNumber}.pdf`);
-        }
-        
-        // Login functionality
-        const loginModal = document.getElementById('login-modal');
-        const closeLogin = document.getElementById('close-login');
-        const loginForm = document.getElementById('login-form');
-        const loginError = document.getElementById('login-error');
-        const backToHome = document.getElementById('back-to-home');
-        const shipmentFormContainer = document.getElementById('shipment-form-container');
+        <!-- Tabs -->
+        <div class="admin-tabs">
+            <button class="tab-btn active" data-tab="create">
+                <i class="fas fa-plus-circle"></i> Create Shipment
+            </button>
+            <button class="tab-btn" data-tab="manage">
+                <i class="fas fa-list"></i> Manage Shipments
+            </button>
+        </div>
 
-        // Show login modal on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            loginModal.classList.add('active');
-        });
-
-        // Close login modal
-        closeLogin.addEventListener('click', function() {
-            loginModal.classList.remove('active');
-            loginError.style.display = 'none';
-        });
-
-        // Handle login form submission
-        loginForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const password = document.getElementById('password').value;
-            
-            // Check password (password: firstrank)
-            if (password === 'firstrank') {
-                // Show shipment form
-                shipmentFormContainer.style.display = 'block';
-                backToHome.style.display = 'block';
-                loginModal.classList.remove('active');
-                loginError.style.display = 'none';
-            } else {
-                // Show error message
-                loginError.style.display = 'block';
-            }
-        });
-
-        // Shipment form submission
-        document.getElementById('shipment-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Generate tracking code
-            const trackingCode = generateTrackingCode();
-            
-            // Get current date and time
-            const now = new Date();
-            const createdAt = now.toISOString();
-            
-            // Calculate expected delivery date (3 days from now by default)
-            const expectedDeliveryDate = new Date(now);
-            expectedDeliveryDate.setDate(now.getDate() + 3);
-            const expectedDelivery = document.getElementById('expected-delivery').value || 
-                                   expectedDeliveryDate.toISOString().split('T')[0];
-            
-            // Get all form values
-            const shipmentData = {
-                shipper: {
-                    name: document.getElementById('shipper-name').value,
-                    email: document.getElementById('shipper-email').value,
-                    phone: document.getElementById('shipper-phone').value,
-                    address: document.getElementById('shipper-address').value
-                },
-                receiver: {
-                    name: document.getElementById('receiver-name').value,
-                    email: document.getElementById('receiver-email').value,
-                    phone: document.getElementById('receiver-phone').value,
-                    address: document.getElementById('receiver-address').value
-                },
-                shipment: {
-                    origin: document.getElementById('origin').value,
-                    destination: document.getElementById('destination').value,
-                    carrier: document.getElementById('carrier').value,
-                    type: document.getElementById('shipment-type').value
-                },
-                package: {
-                    contents: document.getElementById('contents').value,
-                    weight: document.getElementById('weight').value,
-                    departureDate: document.getElementById('departure-date').value,
-                    departureTime: document.getElementById('departure-time').value,
-                    pickupDate: document.getElementById('pickup-date').value,
-                    pickupTime: document.getElementById('pickup-time').value,
-                    expectedDelivery: expectedDelivery,
-                    comments: document.getElementById('comments').value
-                },
-                trackingCode: trackingCode,
-                status: "In Transit",
-                progress: 60, // 60% progress for "In Transit" status
-                createdAt: createdAt,
-                updates: [
-                    {
-                        status: "Order Received",
-                        location: document.getElementById('origin').value,
-                        timestamp: createdAt,
-                        description: "Shipment information received"
-                    },
-                    {
-                        status: "Processing",
-                        location: document.getElementById('origin').value,
-                        timestamp: new Date(now.getTime() + 3600000).toISOString(), // 1 hour later
-                        description: "Package being prepared for shipment"
-                    },
-                    {
-                        status: "In Transit",
-                        location: "In Transit",
-                        timestamp: new Date(now.getTime() + 7200000).toISOString(), // 2 hours later
-                        description: "Package has left origin facility"
-                    }
-                ]
-            };
-            
-            // Save to localStorage
-            localStorage.setItem(`shipment_${trackingCode}`, JSON.stringify(shipmentData));
-            
-            // Also save to a shipments array if it exists, or create it
-            let shipments = JSON.parse(localStorage.getItem('shipments')) || [];
-            shipments.push(trackingCode);
-            localStorage.setItem('shipments', JSON.stringify(shipments));
-            
-            // Display the tracking code
-            document.getElementById('tracking-code-display').textContent = trackingCode;
-            document.getElementById('result-container').style.display = 'block';
-            
-            // Scroll to result
-            document.getElementById('result-container').scrollIntoView({ behavior: 'smooth' });
-            
-            // Clear form
-            document.getElementById('shipment-form').reset();
-        });
-
-        // Copy tracking code to clipboard
-        document.getElementById('copy-btn').addEventListener('click', function() {
-            const trackingCode = document.getElementById('tracking-code-display').textContent;
-            navigator.clipboard.writeText(trackingCode).then(() => {
-                this.textContent = 'Copied!';
-                setTimeout(() => {
-                    this.textContent = 'Copy Tracking Code';
-                }, 2000);
-            });
-        });
-    </script>
-</body>
-</html>
+        <!-- Create Shipment Tab -->
+        <div class="tab-content active" id="create-tab">
+            <div id="shipment-form-container">
+                <div class="container">
+                    <h1>Create New Shipment</h1>
+                    
+                    <div class="form-container">
+                        <form id="shipment-form">
+                            <div class="form-section">
+                                <h2><i class="fas fa-user"></i> Shipper Information</h2>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="shipper-name">Full Name</label>
+                                        <input type="text" id="shipper-name" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="shipper-email">Email</label>
+                                        <input type="email" id="shipper-email" required>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="shipper-phone">Phone Number</label>
+    
