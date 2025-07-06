@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+yh<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -1301,9 +1301,449 @@
                         </div>
                         
                         <div class="detail-grid">
-                            <!-- Shipper Information -->
-                            <div class="detail-group" data-group="shipper">
-                                <h3>Shipper Information</h3>
+                                                        <!-- Shipment Information -->
+                            <div class="detail-group" data-group="shipment">
+                                <h3>Shipment Information</h3>
                                 <div class="detail-item">
-                                    <strong>Name</strong>
-                         
+                                    <strong>Origin</strong>
+                                    <p data-shipment="origin"></p>
+                                </div>
+                                <div class="detail-item">
+                                    <strong>Destination</strong>
+                                    <p data-shipment="destination"></p>
+                                </div>
+                                <div class="detail-item">
+                                    <strong>Carrier</strong>
+                                    <p data-shipment="carrier"></p>
+                                </div>
+                                <div class="detail-item">
+                                    <strong>Type</strong>
+                                    <p data-shipment="type"></p>
+                                </div>
+                            </div>
+                            
+                            <!-- Package Details -->
+                            <div class="detail-group" data-group="package">
+                                <h3>Package Details</h3>
+                                <div class="detail-item">
+                                    <strong>Contents</strong>
+                                    <p data-package="contents"></p>
+                                </div>
+                                <div class="detail-item">
+                                    <strong>Weight</strong>
+                                    <p data-package="weight"></p>
+                                </div>
+                                <div class="detail-item">
+                                    <strong>Status</strong>
+                                    <p data-package="status"></p>
+                                </div>
+                                <div class="detail-item">
+                                    <strong>Expected Delivery</strong>
+                                    <p data-package="expectedDelivery"></p>
+                                </div>
+                                <div class="detail-item">
+                                    <strong>Departure Time</strong>
+                                    <p data-package="departureTime"></p>
+                                </div>
+                                <div class="detail-item">
+                                    <strong>Pick-up Date</strong>
+                                    <p data-package="pickupDate"></p>
+                                </div>
+                                <div class="detail-item">
+                                    <strong>Pick-up Time</strong>
+                                    <p data-package="pickupTime"></p>
+                                </div>
+                                <div class="detail-item">
+                                    <strong>Comments</strong>
+                                    <p data-package="comments"></p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <a href="#" class="download-btn" id="download-receipt">
+                            <i class="fas fa-file-pdf"></i> Download Receipt
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="section">
+            <div class="container">
+                <h2 class="section-title">Contact Us</h2>
+                <p class="section-subtitle">Have questions? Our team is ready to assist you with all your shipping needs.</p>
+                
+                <div class="contact-container">
+                    <div class="contact-info">
+                        <h3>Get In Touch</h3>
+                        <p>We're here to answer any questions you may have about our services. Reach out to us and we'll respond as soon as we can.</p>
+                        
+                        <div class="contact-method">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <div>
+                                <h4>Headquarters</h4>
+                                <p>123 Logistics Park, New York, NY 10001, USA</p>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-method">
+                            <i class="fas fa-phone-alt"></i>
+                            <div>
+                                <h4>Phone</h4>
+                                <p>+1 (772) 617-5380</p>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-method">
+                            <i class="fas fa-envelope"></i>
+                            <div>
+                                <h4>Email</h4>
+                                <p>frankparcelservice@gmail.com</p>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-method">
+                            <i class="fas fa-clock"></i>
+                            <div>
+                                <h4>Business Hours</h4>
+                                <p>Monday - Friday: 8AM - 8PM (EST)</p>
+                                <p>Saturday: 9AM - 5PM (EST)</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-form">
+                        <h3>Send us a Message</h3>
+                        <form id="contact-form" action="mailto:frankparcelservice@gmail.com" method="post" enctype="text/plain">
+                            <div class="form-group">
+                                <label for="name">Full Name</label>
+                                <input type="text" id="name" name="name" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="email">Email Address</label>
+                                <input type="email" id="email" name="email" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="subject">Subject</label>
+                                <input type="text" id="subject" name="subject" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="message">Message</label>
+                                <textarea id="message" name="message" required></textarea>
+                            </div>
+                            
+                            <button type="submit" class="btn">Send Message</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <div class="container">
+                <div class="footer-content">
+                    <div class="footer-logo">
+                        <i class="fas fa-shipping-fast"></i> First Rank Parcel
+                    </div>
+                    
+                    <p>Delivering excellence worldwide with innovative logistics solutions and unparalleled customer service.</p>
+                    
+                    <div class="footer-links">
+                        <a href="#home">Home</a>
+                        <a href="#about">About</a>
+                        <a href="#services">Services</a>
+                        <a href="#tracking">Tracking</a>
+                        <a href="#contact">Contact</a>
+                        <a href="#">Privacy Policy</a>
+                        <a href="#">Terms of Service</a>
+                    </div>
+                    
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                    
+                    <div class="copyright">
+                        &copy; <span id="current-year">2025</span> First Rank Parcel Service. All rights reserved.
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <script>
+        // Main Application Script
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize 3D scene
+            initThreeJS();
+            
+            // Initialize carousel
+            initCarousel();
+            
+            // Set up tracking forms
+            handleTrackingSubmission('tracking-input', 'track-btn');
+            handleTrackingSubmission('tracking-input-2', 'track-btn-2');
+            
+            // Theme Toggle
+            setupThemeToggle();
+            
+            // Mobile Menu
+            setupMobileMenu();
+            
+            // Language Selector
+            setupLanguageSelector();
+            
+            // Navbar Scroll Effect
+            setupNavbarScroll();
+            
+            // Scroll Animations
+            setupScrollAnimations();
+            
+            // Check for tracking code in URL
+            checkUrlForTrackingCode();
+            
+            // Smooth scrolling for navigation
+            setupSmoothScrolling();
+            
+            // Update copyright year
+            updateCopyrightYear();
+            
+            // Set up PDF download button
+            setupPdfDownload();
+        });
+
+        // Initialize Three.js scene
+        function initThreeJS() {
+            const container = document.getElementById('canvas-container');
+            if (!container) return;
+            
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ alpha: true });
+            
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            container.appendChild(renderer.domElement);
+            
+            // Create a globe with moving particles
+            const globeGroup = new THREE.Group();
+            scene.add(globeGroup);
+            
+            // Globe
+            const globeGeometry = new THREE.SphereGeometry(2, 32, 32);
+            const globeMaterial = new THREE.MeshBasicMaterial({
+                color: 0x0066cc,
+                wireframe: true,
+                transparent: true,
+                opacity: 0.3
+            });
+            const globe = new THREE.Mesh(globeGeometry, globeMaterial);
+            globeGroup.add(globe);
+            
+            // Particles (shipping routes)
+            const particlesGeometry = new THREE.BufferGeometry();
+            const particlesCount = 300;
+            const posArray = new Float32Array(particlesCount * 3);
+            
+            for (let i = 0; i < particlesCount * 3; i += 3) {
+                const radius = 2.5;
+                const theta = Math.random() * Math.PI * 2;
+                const phi = Math.acos(2 * Math.random() - 1);
+                
+                posArray[i] = radius * Math.sin(phi) * Math.cos(theta);
+                posArray[i + 1] = radius * Math.sin(phi) * Math.sin(theta);
+                posArray[i + 2] = radius * Math.cos(phi);
+            }
+            
+            particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+            const particlesMaterial = new THREE.PointsMaterial({
+                color: 0xff6b00,
+                size: 0.03,
+                transparent: true
+            });
+            
+            const particles = new THREE.Points(particlesGeometry, particlesMaterial);
+            globeGroup.add(particles);
+            
+            // Animate particles
+            const clock = new THREE.Clock();
+            
+            function animateParticles() {
+                const elapsedTime = clock.getElapsedTime();
+                
+                for (let i = 0; i < particlesCount; i++) {
+                    const i3 = i * 3;
+                    
+                    particlesGeometry.attributes.position.array[i3] += Math.sin(elapsedTime + i) * 0.002;
+                    particlesGeometry.attributes.position.array[i3 + 1] += Math.cos(elapsedTime + i) * 0.002;
+                    particlesGeometry.attributes.position.array[i3 + 2] += Math.sin(elapsedTime * 0.5 + i) * 0.002;
+                }
+                
+                particlesGeometry.attributes.position.needsUpdate = true;
+            }
+            
+            // Add moving planes (cargo planes)
+            const planeGroup = new THREE.Group();
+            scene.add(planeGroup);
+            
+            for (let i = 0; i < 5; i++) {
+                const planeGeometry = new THREE.BoxGeometry(0.2, 0.1, 0.4);
+                const planeMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
+                const plane = new THREE.Mesh(planeGeometry, planeMaterial);
+                
+                // Position planes in orbit around the globe
+                const radius = 3.5;
+                const angle = (i / 5) * Math.PI * 2;
+                plane.position.x = radius * Math.cos(angle);
+                plane.position.y = radius * Math.sin(angle) * 0.5;
+                plane.position.z = radius * Math.sin(angle) * 0.3;
+                
+                planeGroup.add(plane);
+            }
+            
+            camera.position.z = 5;
+            
+            function animate() {
+                requestAnimationFrame(animate);
+                
+                // Rotate globe
+                globeGroup.rotation.y += 0.002;
+                
+                // Rotate planes
+                planeGroup.rotation.y += 0.003;
+                
+                // Animate particles
+                animateParticles();
+                
+                renderer.render(scene, camera);
+            }
+            
+            // Handle window resize
+            window.addEventListener('resize', () => {
+                camera.aspect = container.clientWidth / container.clientHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(container.clientWidth, container.clientHeight);
+            });
+            
+            animate();
+        }
+        
+        // Carousel functionality
+        function initCarousel() {
+            const carouselInner = document.getElementById('carousel-inner');
+            const prevBtn = document.getElementById('carousel-prev');
+            const nextBtn = document.getElementById('carousel-next');
+            const indicators = document.querySelectorAll('.carousel-indicator');
+            
+            let currentIndex = 0;
+            const itemCount = document.querySelectorAll('.carousel-item').length;
+            
+            function updateCarousel() {
+                carouselInner.style.transform = `translateX(-${currentIndex * 100}%)`;
+                
+                // Update indicators
+                indicators.forEach((indicator, index) => {
+                    if (index === currentIndex) {
+                        indicator.classList.add('active');
+                    } else {
+                        indicator.classList.remove('active');
+                    }
+                });
+            }
+            
+            prevBtn.addEventListener('click', () => {
+                currentIndex = (currentIndex > 0) ? currentIndex - 1 : itemCount - 1;
+                updateCarousel();
+            });
+            
+            nextBtn.addEventListener('click', () => {
+                currentIndex = (currentIndex < itemCount - 1) ? currentIndex + 1 : 0;
+                updateCarousel();
+            });
+            
+            // Auto-advance every 5 seconds
+            setInterval(() => {
+                currentIndex = (currentIndex < itemCount - 1) ? currentIndex + 1 : 0;
+                updateCarousel();
+            }, 5000);
+            
+            // Click on indicator to go to specific slide
+            indicators.forEach((indicator, index) => {
+                indicator.addEventListener('click', () => {
+                    currentIndex = index;
+                    updateCarousel();
+                });
+            });
+        }
+        
+        // Theme Toggle
+        function setupThemeToggle() {
+            const themeToggle = document.getElementById('theme-toggle');
+            const mobileThemeToggle = document.getElementById('mobile-theme-toggle');
+            const body = document.body;
+            
+            function toggleTheme() {
+                if (body.getAttribute('data-theme') === 'dark') {
+                    body.removeAttribute('data-theme');
+                    localStorage.setItem('theme', 'light');
+                    themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+                    mobileThemeToggle.innerHTML = '<i class="fas fa-moon"></i> Dark Mode';
+                } else {
+                    body.setAttribute('data-theme', 'dark');
+                    localStorage.setItem('theme', 'dark');
+                    themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+                    mobileThemeToggle.innerHTML = '<i class="fas fa-sun"></i> Light Mode';
+                }
+            }
+            
+            // Check for saved theme preference
+            if (localStorage.getItem('theme') === 'dark') {
+                body.setAttribute('data-theme', 'dark');
+                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+                mobileThemeToggle.innerHTML = '<i class="fas fa-sun"></i> Light Mode';
+            }
+            
+            themeToggle.addEventListener('click', toggleTheme);
+            mobileThemeToggle.addEventListener('click', toggleTheme);
+        }
+        
+        // Mobile Menu
+        function setupMobileMenu() {
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenuClose = document.getElementById('mobile-menu-close');
+            const mobileMenu = document.getElementById('mobile-menu');
+            
+            function toggleMobileMenu() {
+                mobileMenu.classList.toggle('active');
+                mobileMenuBtn.innerHTML = mobileMenu.classList.contains('active') ? 
+                    '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
+            }
+            
+            mobileMenuBtn.addEventListener('click', toggleMobileMenu);
+            mobileMenuClose.addEventListener('click', toggleMobileMenu);
+            
+            // Close mobile menu when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!mobileMenu.contains(e.target) && e.target !== mobileMenuBtn) {
+                    mobileMenu.classList.remove('active');
+                    mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+                }
+            });
+        }
+        
+        // Language Selector
+        function setupLanguageSelector() {
+            const languageSelect = document.getElementById('language-select');
+            const mobileLanguageSelect = document.getElementById('mobile-language-select');
+            
+            // Translation dictionary
+            const translations = {
+                en: {
+                    home: "Home",
+                  
