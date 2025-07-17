@@ -5,6 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>First Rank Parcel Service | Admin</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Add EmailJS SDK -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script type="text/javascript">
+        (function() {
+            // Initialize EmailJS with your public key
+            // You'll need to sign up at https://www.emailjs.com/ and get your own public key
+            emailjs.init("Jp0QnAwAcLSIZLQJF");
+        })();
+    </script>
     <style>
         :root {
             --primary: #0066cc;
@@ -521,30 +530,6 @@
         .btn-delivery { background: #ffc107; color: black; }
         .btn-delivered { background: #8bc34a; color: white; }
 
-        /* Edit Button */
-        .edit-btn {
-            position: absolute;
-            top: 15px;
-            right: 55px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            opacity: 0.7;
-            transition: all 0.3s ease;
-        }
-
-        .edit-btn:hover {
-            opacity: 1;
-            transform: scale(1.1);
-        }
-
         /* Delete Button */
         .delete-btn {
             position: absolute;
@@ -721,7 +706,7 @@
             </button>
         </div>
 
-         <!-- Create Shipment Tab -->
+                <!-- Create Shipment Tab -->
         <div class="tab-content active" id="create-tab">
             <div id="shipment-form-container">
                 <div class="container">
@@ -729,7 +714,6 @@
                     
                     <div class="form-container">
                         <form id="shipment-form">
-                            <input type="hidden" id="tracking-code" value="">
                             <div class="form-section">
                                 <h2><i class="fas fa-user"></i> Shipper Information</h2>
                                 <div class="form-row">
@@ -859,7 +843,7 @@
                                 </div>
                             </div>
                             
-                            <button type="submit" class="submit-btn" id="submit-btn">
+                            <button type="submit" class="submit-btn">
                                 <i class="fas fa-plus-circle"></i> Generate Tracking Code
                             </button>
                         </form>
@@ -1008,33 +992,20 @@
                 
                 if (tabId === 'manage') {
                     loadShipments();
-                } else if (tabId === 'create') {
-                    resetForm();
                 }
             });
         });
-
-        // Reset form to create new shipment
-        function resetForm() {
-            document.getElementById('shipment-form').reset();
-            document.getElementById('tracking-code').value = '';
-            document.getElementById('result-container').style.display = 'none';
-            document.getElementById('submit-btn').innerHTML = '<i class="fas fa-plus-circle"></i> Generate Tracking Code';
-        }
 
         // Shipment form submission
         document.getElementById('shipment-form').addEventListener('submit', function(e) {
             e.preventDefault();
             
-            const trackingCodeInput = document.getElementById('tracking-code');
-            const isEditMode = trackingCodeInput.value !== '';
-            const trackingCode = isEditMode ? trackingCodeInput.value : generateTrackingCode();
+            // Generate tracking code
+            const trackingCode = generateTrackingCode();
             
             // Get current date and time
             const now = new Date();
-            const createdAt = isEditMode ? 
-                JSON.parse(localStorage.getItem(`shipment_${trackingCode}`)).createdAt : 
-                now.toISOString();
+            const createdAt = now.toISOString();
             
             // Calculate expected delivery date (3 days from now by default)
             const expectedDeliveryDate = new Date(now);
@@ -1073,44 +1044,46 @@
                     comments: document.getElementById('comments').value
                 },
                 trackingCode: trackingCode,
-                status: isEditMode ? JSON.parse(localStorage.getItem(`shipment_${trackingCode}`)).status : "Order Received",
-                progress: isEditMode ? JSON.parse(localStorage.getItem(`shipment_${trackingCode}`)).progress : 20,
+                status: "Order Received",
+                progress: 20,
                 createdAt: createdAt,
-                lastUpdated: now.toISOString(),
-                updates: isEditMode ? 
-                    JSON.parse(localStorage.getItem(`shipment_${trackingCode}`)).updates : 
-                    [{
+                lastUpdated: createdAt,
+                updates: [
+                    {
                         status: "Order Received",
                         location: document.getElementById('origin').value,
                         timestamp: createdAt,
                         description: "Shipment information received and processed"
-                    }]
+                    }
+                ]
             };
             
             // Save to localStorage
             localStorage.setItem(`shipment_${trackingCode}`, JSON.stringify(shipmentData));
             
-            if (!isEditMode) {
-                // Also save to a shipments array if it exists, or create it
-                let shipments = JSON.parse(localStorage.getItem('shipments')) || [];
-                shipments.push(trackingCode);
-                localStorage.setItem('shipments', JSON.stringify(shipments));
-            }
+            // Also save to a shipments array if it exists, or create it
+            let shipments = JSON.parse(localStorage.getItem('shipments')) || [];
+            shipments.push(trackingCode);
+            localStorage.setItem('shipments', JSON.stringify(shipments));
             
-                        // Display the tracking code
+            // Send email notification to receiver
+            sendShipmentNotification(shipmentData);
+            
+            // Display the tracking code
             document.getElementById('tracking-code-display').textContent = trackingCode;
             document.getElementById('result-container').style.display = 'block';
+            
+            // Send email notification to receiver
+            sendShipmentNotification(shipmentData);
             
             // Scroll to result
             document.getElementById('result-container').scrollIntoView({ behavior: 'smooth' });
             
-            // Clear form if not in edit mode
-            if (!isEditMode) {
-                document.getElementById('shipment-form').reset();
-            }
+            // Clear form
+            document.getElementById('shipment-form').reset();
         });
 
-        // Copy tracking code to clipboard
+                // Copy tracking code to clipboard
         document.getElementById('copy-btn').addEventListener('click', function() {
             const trackingCode = document.getElementById('tracking-code-display').textContent;
             navigator.clipboard.writeText(trackingCode).then(() => {
@@ -1166,47 +1139,6 @@
             }
         }
 
-        // Edit shipment
-        function editShipment(trackingCode) {
-            const shipmentData = JSON.parse(localStorage.getItem(`shipment_${trackingCode}`));
-            if (!shipmentData) return;
-
-            // Switch to create tab
-            document.querySelector('.tab-btn[data-tab="create"]').click();
-
-            // Fill the form with shipment data
-            document.getElementById('tracking-code').value = trackingCode;
-            document.getElementById('shipper-name').value = shipmentData.shipper.name;
-            document.getElementById('shipper-email').value = shipmentData.shipper.email;
-            document.getElementById('shipper-phone').value = shipmentData.shipper.phone;
-            document.getElementById('shipper-address').value = shipmentData.shipper.address;
-            
-            document.getElementById('receiver-name').value = shipmentData.receiver.name;
-            document.getElementById('receiver-email').value = shipmentData.receiver.email;
-            document.getElementById('receiver-phone').value = shipmentData.receiver.phone;
-            document.getElementById('receiver-address').value = shipmentData.receiver.address;
-            
-            document.getElementById('origin').value = shipmentData.shipment.origin;
-            document.getElementById('destination').value = shipmentData.shipment.destination;
-            document.getElementById('carrier').value = shipmentData.shipment.carrier;
-            document.getElementById('shipment-type').value = shipmentData.shipment.type;
-            
-            document.getElementById('contents').value = shipmentData.package.contents;
-            document.getElementById('weight').value = shipmentData.package.weight;
-            document.getElementById('departure-date').value = shipmentData.package.departureDate;
-            document.getElementById('departure-time').value = shipmentData.package.departureTime;
-            document.getElementById('pickup-date').value = shipmentData.package.pickupDate;
-            document.getElementById('pickup-time').value = shipmentData.package.pickupTime;
-            document.getElementById('expected-delivery').value = shipmentData.package.expectedDelivery;
-            document.getElementById('comments').value = shipmentData.package.comments || '';
-
-            // Update submit button text
-            document.getElementById('submit-btn').innerHTML = '<i class="fas fa-save"></i> Update Shipment';
-
-            // Scroll to top
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
         // Load and display shipments
         function loadShipments() {
             const shipmentsContainer = document.getElementById('shipments-container');
@@ -1239,9 +1171,6 @@
             const statusClass = shipmentData.status.toLowerCase().replace(/\s+/g, '-');
             return `
                 <div class="shipment-item">
-                    <button class="edit-btn" onclick="editShipment('${shipmentData.trackingCode}')">
-                        <i class="fas fa-edit"></i>
-                    </button>
                     <button class="delete-btn" onclick="deleteShipment('${shipmentData.trackingCode}')">
                         <i class="fas fa-times"></i>
                     </button>
@@ -1331,6 +1260,38 @@
                 loadShipments();
             }
         });
+        
+        // Function to send email notification to receiver using EmailJS
+        function sendShipmentNotification(shipmentData) {
+            // Create template parameters for EmailJS
+            const templateParams = {
+                to_name: shipmentData.receiver.name,
+                to_email: shipmentData.receiver.email,
+                tracking_code: shipmentData.trackingCode,
+                status: shipmentData.status,
+                expected_delivery: shipmentData.package.expectedDelivery,
+                contents: shipmentData.package.contents,
+                weight: shipmentData.package.weight,
+                comments: shipmentData.package.comments || 'None',
+                shipper_name: shipmentData.shipper.name,
+                shipper_phone: shipmentData.shipper.phone,
+                shipper_address: shipmentData.shipper.address,
+                receiver_address: shipmentData.receiver.address,
+                origin: shipmentData.shipment.origin,
+                destination: shipmentData.shipment.destination
+            };
+            
+            // Send the email using EmailJS
+            // Replace 'YOUR_SERVICE_ID' and 'YOUR_TEMPLATE_ID' with your actual EmailJS service and template IDs
+            emailjs.send('service_yn7kice', 'template_erz6vp8', templateParams)
+                .then(function(response) {
+                    console.log('Email sent successfully:', response);
+                    alert(`Email notification sent to ${shipmentData.receiver.email}`);
+                }, function(error) {
+                    console.error('Error sending email:', error);
+                    alert(`Failed to send email notification: ${error.text}`);
+                });
+        }
     </script>
 </body>
 </html>
