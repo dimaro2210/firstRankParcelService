@@ -7,12 +7,26 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Add EmailJS SDK -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <!-- Add Supabase SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script type="text/javascript">
         (function() {
-            // Initialize EmailJS with your public key
-            // You'll need to sign up at https://www.emailjs.com/ and get your own public key
-            emailjs.init("Jp0QnAwAcLSIZLQJF");
+            // EmailJS configuration — using your provided IDs
+            const EMAILJS_PUBLIC_KEY = 'Jp0QnAwAcLSIZLQJF';
+            const EMAILJS_SERVICE_ID = 'service_yn7kice';
+            const EMAILJS_TEMPLATE_ID = 'template_erz6vp8';
+
+            emailjs.init(EMAILJS_PUBLIC_KEY);
+
+            // Expose service/template ids so submit handler can use them
+            window.EMAILJS_SERVICE_ID = EMAILJS_SERVICE_ID;
+            window.EMAILJS_TEMPLATE_ID = EMAILJS_TEMPLATE_ID;
         })();
+
+        // Initialize Supabase
+        const supabaseUrl = 'https://okfnnxrrzpoaxbqktrao.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9rZm5ueHJyenBvYXhicWt0cmFvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY0NjIyMDIsImV4cCI6MjA3MjAzODIwMn0.FG6mG6zp4n7OX5_ft608vSfO6jm0hiFTwoR0NsueOV4';
+        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
     </script>
     <style>
         :root {
@@ -463,6 +477,11 @@
             font-size: 1.2rem;
             font-weight: bold;
             color: var(--primary);
+            cursor: pointer;
+        }
+
+        .shipment-code:hover {
+            text-decoration: underline;
         }
 
         .status-badge {
@@ -616,6 +635,21 @@
             color: var(--secondary);
         }
 
+        /* Loading Spinner */
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
         /* Responsive Design */
         @media (max-width: 768px) {
             .form-row {
@@ -706,7 +740,7 @@
             </button>
         </div>
 
-                <!-- Create Shipment Tab -->
+        <!-- Create Shipment Tab -->
         <div class="tab-content active" id="create-tab">
             <div id="shipment-form-container">
                 <div class="container">
@@ -843,7 +877,7 @@
                                 </div>
                             </div>
                             
-                            <button type="submit" class="submit-btn">
+                            <button type="submit" class="submit-btn" id="submit-btn">
                                 <i class="fas fa-plus-circle"></i> Generate Tracking Code
                             </button>
                         </form>
@@ -858,7 +892,7 @@
                         </button>
                         <p class="instructions">
                             Use this code to track your shipment on our website.<br>
-                            <a href="logistics.html#tracking" style="color: var(--secondary);">Go to the tracking page</a> or save your tracking code for future reference.
+                            <a href="index.html#tracking" style="color: var(--secondary);">Go to the tracking page</a> or save your tracking code for future reference.
                         </p>
                     </div>
                 </div>
@@ -889,7 +923,6 @@
     </a>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script>
         // Theme Toggle
         const body = document.body;
@@ -950,20 +983,31 @@
         });
 
         // Handle login form submission
-        loginForm.addEventListener('submit', function(e) {
+        loginForm.addEventListener('submit', async function(e) {
             e.preventDefault();
             
             const password = document.getElementById('password').value;
             
-            // Check password (password: firstrank)
-            if (password === 'firstrank') {
-                // Show admin panel
-                adminPanel.style.display = 'block';
-                backToHome.style.display = 'flex';
-                loginModal.classList.remove('active');
-                loginError.style.display = 'none';
-            } else {
-                // Show error message
+            // Check password against Supabase
+            try {
+                const { data, error } = await supabase
+                    .from('admin_users')
+                    .select('*')
+                    .eq('password', password)
+                    .single();
+                
+                if (error || !data) {
+                    // Show error message
+                    loginError.style.display = 'block';
+                } else {
+                    // Show admin panel
+                    adminPanel.style.display = 'block';
+                    backToHome.style.display = 'flex';
+                    loginModal.classList.remove('active');
+                    loginError.style.display = 'none';
+                }
+            } catch (error) {
+                console.error('Login error:', error);
                 loginError.style.display = 'block';
             }
         });
@@ -997,302 +1041,371 @@
         });
 
         // Shipment form submission
-        document.getElementById('shipment-form').addEventListener('submit', function(e) {
+        document.getElementById('shipment-form').addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            // Generate tracking code
-            const trackingCode = generateTrackingCode();
+            // Show loading state
+            const submitBtn = document.getElementById('submit-btn');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<span class="loading-spinner"></span> Creating...';
+            submitBtn.disabled = true;
             
-            // Get current date and time
-            const now = new Date();
-            const createdAt = now.toISOString();
-            
-            // Calculate expected delivery date (3 days from now by default)
-            const expectedDeliveryDate = new Date(now);
-            expectedDeliveryDate.setDate(now.getDate() + 3);
-            const expectedDelivery = document.getElementById('expected-delivery').value || 
-                                   expectedDeliveryDate.toISOString().split('T')[0];
-            
-            // Get all form values
-            const shipmentData = {
-                shipper: {
-                    name: document.getElementById('shipper-name').value,
-                    email: document.getElementById('shipper-email').value,
-                    phone: document.getElementById('shipper-phone').value,
-                    address: document.getElementById('shipper-address').value
-                },
-                receiver: {
-                    name: document.getElementById('receiver-name').value,
-                    email: document.getElementById('receiver-email').value,
-                    phone: document.getElementById('receiver-phone').value,
-                    address: document.getElementById('receiver-address').value
-                },
-                shipment: {
+            try {
+                // Generate tracking code
+                const trackingCode = generateTrackingCode();
+                
+                // Get current date and time
+                const now = new Date();
+                const createdAt = now.toISOString();
+                
+                // Calculate expected delivery date (3 days from now by default)
+                const expectedDeliveryDate = new Date(now);
+                expectedDeliveryDate.setDate(now.getDate() + 3);
+                const expectedDelivery = document.getElementById('expected-delivery').value || 
+                                       expectedDeliveryDate.toISOString().split('T')[0];
+                
+                // Get all form values
+                const shipmentData = {
+                    tracking_code: trackingCode,
+                    shipper_name: document.getElementById('shipper-name').value,
+                    shipper_email: document.getElementById('shipper-email').value,
+                    shipper_phone: document.getElementById('shipper-phone').value,
+                    shipper_address: document.getElementById('shipper-address').value,
+                    receiver_name: document.getElementById('receiver-name').value,
+                    receiver_email: document.getElementById('receiver-email').value,
+                    receiver_phone: document.getElementById('receiver-phone').value,
+                    receiver_address: document.getElementById('receiver-address').value,
                     origin: document.getElementById('origin').value,
                     destination: document.getElementById('destination').value,
                     carrier: document.getElementById('carrier').value,
-                    type: document.getElementById('shipment-type').value
-                },
-                package: {
+                    shipment_type: document.getElementById('shipment-type').value,
                     contents: document.getElementById('contents').value,
                     weight: document.getElementById('weight').value,
-                    departureDate: document.getElementById('departure-date').value,
-                    departureTime: document.getElementById('departure-time').value,
-                    pickupDate: document.getElementById('pickup-date').value,
-                    pickupTime: document.getElementById('pickup-time').value,
-                    expectedDelivery: expectedDelivery,
-                    comments: document.getElementById('comments').value
-                },
-                trackingCode: trackingCode,
-                status: "Order Received",
-                progress: 20,
-                createdAt: createdAt,
-                lastUpdated: createdAt,
-                updates: [
-                    {
-                        status: "Order Received",
-                        location: document.getElementById('origin').value,
-                        timestamp: createdAt,
-                        description: "Shipment information received and processed"
-                    }
-                ]
-            };
-            
-            // Save to localStorage
-            localStorage.setItem(`shipment_${trackingCode}`, JSON.stringify(shipmentData));
-            
-            // Also save to a shipments array if it exists, or create it
-            let shipments = JSON.parse(localStorage.getItem('shipments')) || [];
-            shipments.push(trackingCode);
-            localStorage.setItem('shipments', JSON.stringify(shipments));
-            
-            // Send email notification to receiver
-            sendShipmentNotification(shipmentData);
-            
-            // Display the tracking code
-            document.getElementById('tracking-code-display').textContent = trackingCode;
-            document.getElementById('result-container').style.display = 'block';
-            
-            // Send email notification to receiver
-            sendShipmentNotification(shipmentData);
-            
-            // Scroll to result
-            document.getElementById('result-container').scrollIntoView({ behavior: 'smooth' });
-            
-            // Clear form
-            document.getElementById('shipment-form').reset();
-        });
-
-                // Copy tracking code to clipboard
-        document.getElementById('copy-btn').addEventListener('click', function() {
-            const trackingCode = document.getElementById('tracking-code-display').textContent;
-            navigator.clipboard.writeText(trackingCode).then(() => {
-                this.innerHTML = '<i class="fas fa-check"></i> Copied!';
-                setTimeout(() => {
-                    this.innerHTML = '<i class="fas fa-copy"></i> Copy Tracking Code';
-                }, 2000);
-            });
-        });
-
-        // Status management
-        function updateShipmentStatus(trackingCode, newStatus) {
-            const shipmentData = JSON.parse(localStorage.getItem(`shipment_${trackingCode}`));
-            if (!shipmentData) return;
-
-            const statusMap = {
-                'Order Received': { progress: 20, description: 'Shipment information received and processed' },
-                'Processing': { progress: 40, description: 'Package being prepared for shipment' },
-                'In Transit': { progress: 60, description: 'Package has left origin facility and is in transit' },
-                'Out for Delivery': { progress: 80, description: 'Package is out for delivery' },
-                'Delivered': { progress: 100, description: 'Package has been successfully delivered' }
-            };
-
-            shipmentData.status = newStatus;
-            shipmentData.progress = statusMap[newStatus].progress;
-            shipmentData.lastUpdated = new Date().toISOString();
-
-            // Add new update
-            shipmentData.updates.push({
-                status: newStatus,
-                location: newStatus === 'Delivered' ? shipmentData.shipment.destination : 'In Transit',
-                timestamp: shipmentData.lastUpdated,
-                description: statusMap[newStatus].description
-            });
-
-            localStorage.setItem(`shipment_${trackingCode}`, JSON.stringify(shipmentData));
-            loadShipments();
-        }
-
-        // Delete shipment
-        function deleteShipment(trackingCode) {
-            if (confirm('Are you sure you want to delete this shipment?')) {
-                // Remove from localStorage
-                localStorage.removeItem(`shipment_${trackingCode}`);
+                    departure_date: document.getElementById('departure-date').value,
+                    departure_time: document.getElementById('departure-time').value,
+                    pickup_date: document.getElementById('pickup-date').value,
+                    pickup_time: document.getElementById('pickup-time').value,
+                    expected_delivery: expectedDelivery,
+                    comments: document.getElementById('comments').value,
+                    status: 'Order Received',
+                    created_at: createdAt,
+                    updated_at: createdAt
+                };
                 
-                // Remove from shipments array
-                let shipments = JSON.parse(localStorage.getItem('shipments')) || [];
-                shipments = shipments.filter(code => code !== trackingCode);
-                localStorage.setItem('shipments', JSON.stringify(shipments));
+                // Insert into Supabase
+                const { data, error } = await supabase
+                    .from('shipments')
+                    .insert([shipmentData])
+                    .select();
                 
-                // Reload shipments
-                loadShipments();
-            }
-        }
-
-        // Load and display shipments
-        function loadShipments() {
-            const shipmentsContainer = document.getElementById('shipments-container');
-            const shipments = JSON.parse(localStorage.getItem('shipments')) || [];
-            
-            if (shipments.length === 0) {
-                shipmentsContainer.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-box-open"></i>
-                        <h3>No shipments found</h3>
-                        <p>Create your first shipment to get started</p>
-                    </div>
-                `;
-                return;
-            }
-
-            let shipmentsHtml = '';
-            shipments.forEach(trackingCode => {
-                const shipmentData = JSON.parse(localStorage.getItem(`shipment_${trackingCode}`));
-                if (shipmentData) {
-                    shipmentsHtml += createShipmentCard(shipmentData);
+                if (error) {
+                    console.error('Error creating shipment:', error);
+                    alert('Error creating shipment. Please try again.');
+                    return;
                 }
-            });
-
-            shipmentsContainer.innerHTML = shipmentsHtml;
-        }
-
-        // Create shipment card HTML
-        function createShipmentCard(shipmentData) {
-            const statusClass = shipmentData.status.toLowerCase().replace(/\s+/g, '-');
-            return `
-                <div class="shipment-item">
-                    <button class="delete-btn" onclick="deleteShipment('${shipmentData.trackingCode}')">
-                        <i class="fas fa-times"></i>
-                    </button>
-                    <div class="shipment-header">
-                        <div class="shipment-code">${shipmentData.trackingCode}</div>
-                        <div class="status-badge status-${statusClass}">${shipmentData.status}</div>
-                    </div>
-                    
-                    <div class="progress-container">
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: ${shipmentData.progress}%"></div>
-                        </div>
-                        <small style="color: var(--text-color); opacity: 0.7;">${shipmentData.progress}% Complete</small>
-                    </div>
-                    
-                    <div class="shipment-details">
-                        <div class="detail-item">
-                            <div class="detail-label">From</div>
-                            <div class="detail-value">${shipmentData.shipper.name}</div>
-                        </div>
-                        <div class="detail-item">
-                            <div class="detail-label">To</div>
-                            <div class="detail-value">${shipmentData.receiver.name}</div>
-                        </div>
-                        <div class="detail-item">
-                            <div class="detail-label">Origin</div>
-                            <div class="detail-value">${shipmentData.shipment.origin}</div>
-                        </div>
-                        <div class="detail-item">
-                            <div class="detail-label">Destination</div>
-                            <div class="detail-value">${shipmentData.shipment.destination}</div>
-                        </div>
-                        <div class="detail-item">
-                            <div class="detail-label">Contents</div>
-                            <div class="detail-value">${shipmentData.package.contents}</div>
-                        </div>
-                        <div class="detail-item">
-                            <div class="detail-label">Weight</div>
-                            <div class="detail-value">${shipmentData.package.weight} kg</div>
-                        </div>
-                    </div>
-                    
-                    <div class="status-controls">
-                        <button class="status-btn btn-order" onclick="updateShipmentStatus('${shipmentData.trackingCode}', 'Order Received')">
-                            Order Received
-                        </button>
-                        <button class="status-btn btn-processing" onclick="updateShipmentStatus('${shipmentData.trackingCode}', 'Processing')">
-                            Processing
-                        </button>
-                        <button class="status-btn btn-transit" onclick="updateShipmentStatus('${shipmentData.trackingCode}', 'In Transit')">
-                            In Transit
-                        </button>
-                        <button class="status-btn btn-delivery" onclick="updateShipmentStatus('${shipmentData.trackingCode}', 'Out for Delivery')">
-                            Out for Delivery
-                        </button>
-                        <button class="status-btn btn-delivered" onclick="updateShipmentStatus('${shipmentData.trackingCode}', 'Delivered')">
-                            Delivered
-                        </button>
-                    </div>
-                </div>
-            `;
-        }
-
-        // Search functionality
-        document.getElementById('search-input').addEventListener('input', function() {
-            const searchTerm = this.value.toLowerCase();
-            const shipmentItems = document.querySelectorAll('.shipment-item');
-            
-            shipmentItems.forEach(item => {
-                const trackingCode = item.querySelector('.shipment-code').textContent.toLowerCase();
-                if (trackingCode.includes(searchTerm)) {
-                    item.style.display = 'block';
-                } else {
-                    item.style.display = 'none';
+                
+                // Create initial status update
+                const statusUpdate = {
+                    tracking_code: trackingCode,
+                    status: 'Order Received',
+                    location: document.getElementById('origin').value,
+                    description: 'Shipment created and order received',
+                    updated_at: createdAt
+                };
+                
+                const { error: statusError } = await supabase
+                    .from('shipments_update')
+                    .insert([statusUpdate]);
+                
+                if (statusError) {
+                    console.error('Error creating status update:', statusError);
                 }
-            });
-        });
+                
+                // Show result container with tracking code
+                document.getElementById('tracking-code-display').textContent = trackingCode;
+                document.getElementById('result-container').style.display = 'block';
+                
+                // Send email notification to receiver
+                try {
+                    // Build full payload with all shipment details (use same keys in your EmailJS template)
+                    const emailParams = {
+                        to_email: shipmentData.receiver_email,
+                        to_name: shipmentData.receiver_name,
+                        tracking_code: shipmentData.tracking_code,
 
-        // Initialize on page load
-        window.addEventListener('load', function() {
-            // Check if already logged in (for development)
-            const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.get('dev') === 'true') {
-                loginModal.classList.remove('active');
-                adminPanel.style.display = 'block';
-                backToHome.style.display = 'flex';
-                loadShipments();
+                        // Shipper information
+                        shipper_name: shipmentData.shipper_name,
+                        shipper_email: shipmentData.shipper_email,
+                        shipper_phone: shipmentData.shipper_phone,
+                        shipper_address: shipmentData.shipper_address,
+
+                        // Receiver information
+                        receiver_phone: shipmentData.receiver_phone,
+                        receiver_address: shipmentData.receiver_address,
+
+                        // Shipment details
+                        origin: shipmentData.origin,
+                        destination: shipmentData.destination,
+                        carrier: shipmentData.carrier,
+                        shipment_type: shipmentData.shipment_type,
+                        contents: shipmentData.contents,
+                        weight: shipmentData.weight,
+                        departure_date: shipmentData.departure_date || '',
+                        departure_time: shipmentData.departure_time || '',
+                        pickup_date: shipmentData.pickup_date || '',
+                        pickup_time: shipmentData.pickup_time || '',
+                        expected_delivery: shipmentData.expected_delivery,
+                        comments: shipmentData.comments || '',
+
+                        // Extras
+                        tracking_url: window.location.origin + '/index.html#tracking?code=' + shipmentData.tracking_code,
+                        created_at: shipmentData.created_at
+                    };
+
+                    // Send email using configured EmailJS IDs
+                    const emailResult = await emailjs.send(window.EMAILJS_SERVICE_ID, window.EMAILJS_TEMPLATE_ID, emailParams);
+                    console.log('EmailJS send result:', emailResult);
+                 } catch (emailError) {
+                     console.error('Error sending email:', emailError);
+                 }
+                
+                // Reset form
+                document.getElementById('shipment-form').reset();
+                
+            } catch (error) {
+                console.error('Unexpected error:', error);
+                alert('An unexpected error occurred. Please try again.');
+            } finally {
+                // Reset button state
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
             }
         });
         
-        // Function to send email notification to receiver using EmailJS
-        function sendShipmentNotification(shipmentData) {
-            // Create template parameters for EmailJS
-            const templateParams = {
-                to_name: shipmentData.receiver.name,
-                to_email: shipmentData.receiver.email,
-                tracking_code: shipmentData.trackingCode,
-                status: shipmentData.status,
-                expected_delivery: shipmentData.package.expectedDelivery,
-                contents: shipmentData.package.contents,
-                weight: shipmentData.package.weight,
-                comments: shipmentData.package.comments || 'None',
-                shipper_name: shipmentData.shipper.name,
-                shipper_phone: shipmentData.shipper.phone,
-                shipper_address: shipmentData.shipper.address,
-                receiver_address: shipmentData.receiver.address,
-                origin: shipmentData.shipment.origin,
-                destination: shipmentData.shipment.destination
-            };
+        // Copy tracking code to clipboard
+        document.getElementById('copy-btn').addEventListener('click', function() {
+            const trackingCode = document.getElementById('tracking-code-display').textContent;
+            navigator.clipboard.writeText(trackingCode).then(function() {
+                const originalText = this.innerHTML;
+                this.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                
+                setTimeout(() => {
+                    this.innerHTML = originalText;
+                }, 2000);
+            }.bind(this));
+        });
+        
+        // Load shipments for management
+        async function loadShipments() {
+            const shipmentsContainer = document.getElementById('shipments-container');
+            shipmentsContainer.innerHTML = '<p>Loading shipments...</p>';
             
-            // Send the email using EmailJS
-            // Replace 'YOUR_SERVICE_ID' and 'YOUR_TEMPLATE_ID' with your actual EmailJS service and template IDs
-            emailjs.send('service_yn7kice', 'template_erz6vp8', templateParams)
-                .then(function(response) {
-                    console.log('Email sent successfully:', response);
-                    alert(`Email notification sent to ${shipmentData.receiver.email}`);
-                }, function(error) {
-                    console.error('Error sending email:', error);
-                    alert(`Failed to send email notification: ${error.text}`);
+            try {
+                const { data: shipments, error } = await supabase
+                    .from('shipments')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+                
+                if (error) {
+                    console.error('Error loading shipments:', error);
+                    shipmentsContainer.innerHTML = '<p>Error loading shipments. Please try again.</p>';
+                    return;
+                }
+                
+                if (!shipments || shipments.length === 0) {
+                    shipmentsContainer.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-box-open"></i>
+                            <h3>No shipments found</h3>
+                            <p>Create your first shipment to get started</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                let shipmentsHtml = '';
+                
+                shipments.forEach(shipment => {
+                    const statusClass = `status-${shipment.status.toLowerCase().replace(/\s+/g, '-')}`;
+                    
+                    shipmentsHtml += `
+                        <div class="shipment-item" data-id="${shipment.tracking_code}">
+                            <button class="delete-btn" data-id="${shipment.tracking_code}">
+                                <i class="fas fa-times"></i>
+                            </button>
+                            <div class="shipment-header">
+                                <div class="shipment-code">${shipment.tracking_code}</div>
+                                <div class="status-badge ${statusClass}">${shipment.status}</div>
+                            </div>
+                            <div class="shipment-details">
+                                <div class="detail-item">
+                                    <span class="detail-label">From</span>
+                                    <span class="detail-value">${shipment.origin}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">To</span>
+                                    <span class="detail-value">${shipment.destination}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Carrier</span>
+                                    <span class="detail-value">${shipment.carrier}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Created</span>
+                                    <span class="detail-value">${new Date(shipment.created_at).toLocaleDateString()}</span>
+                                </div>
+                            </div>
+                            <div class="progress-container">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: ${getProgressWidth(shipment.status)}%"></div>
+                                </div>
+                            </div>
+                            <div class="status-controls">
+                                <button class="status-btn btn-order" data-id="${shipment.tracking_code}" data-status="Order Received">Order Received</button>
+                                <button class="status-btn btn-processing" data-id="${shipment.tracking_code}" data-status="Processing">Processing</button>
+                                <button class="status-btn btn-transit" data-id="${shipment.tracking_code}" data-status="In Transit">In Transit</button>
+                                <button class="status-btn btn-delivery" data-id="${shipment.tracking_code}" data-status="Out for Delivery">Out for Delivery</button>
+                                <button class="status-btn btn-delivered" data-id="${shipment.tracking_code}" data-status="Delivered">Delivered</button>
+                            </div>
+                        </div>
+                    `;
                 });
+                
+                shipmentsContainer.innerHTML = shipmentsHtml;
+                
+                // Add event listeners for status buttons
+                document.querySelectorAll('.status-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const trackingCode = this.getAttribute('data-id');
+                        const newStatus = this.getAttribute('data-status');
+                        updateShipmentStatus(trackingCode, newStatus);
+                    });
+                });
+                
+                // Add event listeners for delete buttons
+                document.querySelectorAll('.delete-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const trackingCode = this.getAttribute('data-id');
+                        deleteShipment(trackingCode);
+                    });
+                });
+                
+                // Add search functionality
+                const searchInput = document.getElementById('search-input');
+                searchInput.addEventListener('input', function() {
+                    const searchTerm = this.value.toLowerCase();
+                    const shipmentItems = document.querySelectorAll('.shipment-item');
+                    
+                    shipmentItems.forEach(item => {
+                        const trackingCode = item.getAttribute('data-id').toLowerCase();
+                        if (trackingCode.includes(searchTerm)) {
+                            item.style.display = 'block';
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    });
+                });
+                
+            } catch (error) {
+                console.error('Error loading shipments:', error);
+                shipmentsContainer.innerHTML = '<p>Error loading shipments. Please try again.</p>';
+            }
+        }
+        
+        function getProgressWidth(status) {
+            switch(status) {
+                case 'Order Received': return 20;
+                case 'Processing': return 40;
+                case 'In Transit': return 60;
+                case 'Out for Delivery': return 80;
+                case 'Delivered': return 100;
+                default: return 0;
+            }
+        }
+        
+        async function updateShipmentStatus(trackingCode, newStatus) {
+            try {
+                const now = new Date().toISOString();
+                
+                // Update shipment status
+                const { error: updateError } = await supabase
+                    .from('shipments')
+                    .update({ 
+                        status: newStatus,
+                        updated_at: now
+                    })
+                    .eq('tracking_code', trackingCode);
+                
+                if (updateError) {
+                    console.error('Error updating shipment:', updateError);
+                    alert('Error updating shipment status. Please try again.');
+                    return;
+                }
+                
+                // Create status update record
+                const statusUpdate = {
+                    tracking_code: trackingCode,
+                    status: newStatus,
+                    location: '', // You might want to set this based on the status
+                    description: `Status updated to ${newStatus}`,
+                    updated_at: now
+                };
+                
+                const { error: statusError } = await supabase
+                    .from('shipments_update')
+                    .insert([statusUpdate]);
+                
+                if (statusError) {
+                    console.error('Error creating status update:', statusError);
+                }
+                
+                // Reload shipments to reflect the change
+                loadShipments();
+                
+            } catch (error) {
+                console.error('Error updating shipment status:', error);
+                alert('Error updating shipment status. Please try again.');
+            }
+        }
+        
+        async function deleteShipment(trackingCode) {
+            if (!confirm('Are you sure you want to delete this shipment? This action cannot be undone.')) {
+                return;
+            }
+            
+            try {
+                // Delete status updates first (due to foreign key constraint)
+                const { error: statusError } = await supabase
+                    .from('shipments_update')
+                    .delete()
+                    .eq('tracking_code', trackingCode);
+                
+                if (statusError) {
+                    console.error('Error deleting status updates:', statusError);
+                    alert('Error deleting shipment. Please try again.');
+                    return;
+                }
+                
+                // Delete shipment
+                const { error: shipmentError } = await supabase
+                    .from('shipments')
+                    .delete()
+                    .eq('tracking_code', trackingCode);
+                
+                if (shipmentError) {
+                    console.error('Error deleting shipment:', shipmentError);
+                    alert('Error deleting shipment. Please try again.');
+                    return;
+                }
+                
+                // Reload shipments
+                loadShipments();
+                
+            } catch (error) {
+                console.error('Error deleting shipment:', error);
+                alert('Error deleting shipment. Please try again.');
+            }
         }
     </script>
 </body>
 </html>
-
