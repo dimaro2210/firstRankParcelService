@@ -548,6 +548,15 @@
         .btn-transit { background: #4caf50; color: white; }
         .btn-delivery { background: #ffc107; color: black; }
         .btn-delivered { background: #8bc34a; color: white; }
+        
+        .edit-instructions-btn {
+            background: #17a2b8 !important;
+            color: white !important;
+        }
+        
+        .edit-instructions-btn:hover {
+            background: #138496 !important;
+        }
 
         /* Delete Button */
         .delete-btn {
@@ -917,6 +926,31 @@
         </div>
     </div>
 
+    <!-- Edit Instructions Modal -->
+    <div class="login-modal" id="edit-instructions-modal">
+        <div class="login-container">
+            <h1><i class="fas fa-edit"></i> Edit Special Instructions</h1>
+            <p>Update the special instructions for this shipment</p>
+            <form class="login-form" id="edit-instructions-form">
+                <div class="form-group">
+                    <label for="instructions-input">Special Instructions</label>
+                    <textarea id="instructions-input" rows="4" placeholder="Enter special instructions for this shipment..." style="min-height: 100px; resize: vertical;"></textarea>
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <button type="submit" class="login-btn" style="flex: 1;">
+                        <i class="fas fa-save"></i> Save Changes
+                    </button>
+                    <button type="button" class="login-btn" id="cancel-edit-btn" style="background: #dc3545; flex: 1;">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                </div>
+                <div class="error-message" id="edit-error">
+                    Failed to update instructions. Please try again.
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Back to Home Button -->
     <a href="index.html" class="back-to-home" id="back-to-home">
         <i class="fas fa-arrow-left"></i> Back to Home
@@ -1254,6 +1288,10 @@
                                     <span class="detail-label">Created</span>
                                     <span class="detail-value">${new Date(shipment.created_at).toLocaleDateString()}</span>
                                 </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Special Instructions</span>
+                                    <span class="detail-value special-instructions" data-id="${shipment.tracking_code}">${shipment.comments || 'None'}</span>
+                                </div>
                             </div>
                             <div class="progress-container">
                                 <div class="progress-bar">
@@ -1261,6 +1299,9 @@
                                 </div>
                             </div>
                             <div class="status-controls">
+                                <button class="status-btn edit-instructions-btn" data-id="${shipment.tracking_code}" style="background: #17a2b8; color: white;">
+                                    <i class="fas fa-edit"></i> Edit Instructions
+                                </button>
                                 <button class="status-btn btn-order" data-id="${shipment.tracking_code}" data-status="Order Received">Order Received</button>
                                 <button class="status-btn btn-processing" data-id="${shipment.tracking_code}" data-status="Processing">Processing</button>
                                 <button class="status-btn btn-transit" data-id="${shipment.tracking_code}" data-status="In Transit">In Transit</button>
@@ -1287,6 +1328,15 @@
                     btn.addEventListener('click', function() {
                         const trackingCode = this.getAttribute('data-id');
                         deleteShipment(trackingCode);
+                    });
+                });
+                
+                // Add event listeners for edit instructions buttons
+                document.querySelectorAll('.edit-instructions-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const trackingCode = this.getAttribute('data-id');
+                        const currentInstructions = document.querySelector(`.special-instructions[data-id="${trackingCode}"]`).textContent;
+                        showEditInstructionsModal(trackingCode, currentInstructions === 'None' ? '' : currentInstructions);
                     });
                 });
                 
@@ -1406,6 +1456,86 @@
                 alert('Error deleting shipment. Please try again.');
             }
         }
+        
+        // Edit Instructions Modal Functions
+        let currentEditingTrackingCode = null;
+        
+        function showEditInstructionsModal(trackingCode, currentInstructions) {
+            currentEditingTrackingCode = trackingCode;
+            document.getElementById('instructions-input').value = currentInstructions;
+            document.getElementById('edit-instructions-modal').classList.add('active');
+            document.getElementById('edit-error').style.display = 'none';
+        }
+        
+        function hideEditInstructionsModal() {
+            document.getElementById('edit-instructions-modal').classList.remove('active');
+            currentEditingTrackingCode = null;
+        }
+        
+        // Edit Instructions Form Handler
+        document.getElementById('edit-instructions-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            if (!currentEditingTrackingCode) {
+                return;
+            }
+            
+            const newInstructions = document.getElementById('instructions-input').value.trim();
+            
+            try {
+                // Show loading state
+                const submitBtn = this.querySelector('button[type="submit"]');
+                const originalText = submitBtn.innerHTML;
+                submitBtn.innerHTML = '<span class="loading-spinner"></span> Saving...';
+                submitBtn.disabled = true;
+                
+                // Update the shipment in Supabase
+                const { error } = await supabase
+                    .from('shipments')
+                    .update({ 
+                        comments: newInstructions,
+                        updated_at: new Date().toISOString()
+                    })
+                    .eq('tracking_code', currentEditingTrackingCode);
+                
+                if (error) {
+                    console.error('Error updating instructions:', error);
+                    document.getElementById('edit-error').style.display = 'block';
+                    return;
+                }
+                
+                // Create a status update for the instruction change
+                const statusUpdate = {
+                    tracking_code: currentEditingTrackingCode,
+                    status: 'Instructions Updated',
+                    location: '',
+                    description: `Special instructions updated: ${newInstructions || 'Instructions cleared'}`,
+                    updated_at: new Date().toISOString()
+                };
+                
+                await supabase
+                    .from('shipments_update')
+                    .insert([statusUpdate]);
+                
+                // Hide modal and reload shipments
+                hideEditInstructionsModal();
+                loadShipments();
+                
+            } catch (error) {
+                console.error('Error updating instructions:', error);
+                document.getElementById('edit-error').style.display = 'block';
+            } finally {
+                // Reset button state
+                const submitBtn = this.querySelector('button[type="submit"]');
+                submitBtn.innerHTML = '<i class="fas fa-save"></i> Save Changes';
+                submitBtn.disabled = false;
+            }
+        });
+        
+        // Cancel button handler
+        document.getElementById('cancel-edit-btn').addEventListener('click', function() {
+            hideEditInstructionsModal();
+        });
     </script>
 </body>
 </html>
