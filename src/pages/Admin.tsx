@@ -155,7 +155,7 @@ export default function Admin() {
   const [newWpCenter, setNewWpCenter] = useState("");
 
   // Settings tab state
-  const [wallets, setWallets] = useState({ bitcoin: "", usdt: "" });
+  const [wallets, setWallets] = useState({ bitcoin: "" });
   const [settingsMsg, setSettingsMsg] = useState({ type: "", text: "" });
 
   const refreshShipments = async () => setShipments(await getShipments(supabaseAdmin));
@@ -2044,17 +2044,8 @@ Describe the purpose of this bill, what services are being charged, and any rele
                         <label className={lbl}>Bitcoin (BTC) Address</label>
                         <input
                           value={wallets.bitcoin}
-                          onChange={e => setWallets({ ...wallets, bitcoin: e.target.value })}
-                          placeholder="bc1q..."
-                          className={inp}
-                        />
-                      </div>
-                      <div>
-                        <label className={lbl}>USDT (TRC-20) Address</label>
-                        <input
-                          value={wallets.usdt}
-                          onChange={e => setWallets({ ...wallets, usdt: e.target.value })}
-                          placeholder="T..."
+                          onChange={e => setWallets({ bitcoin: e.target.value })}
+                          placeholder="1A... or bc1q..."
                           className={inp}
                         />
                       </div>

@@ -154,11 +154,11 @@ export default function Dashboard({ sharedShipment, sharedRecipientName, sharedS
   const [showSharedDeposit, setShowSharedDeposit] = useState(false);
   const [sharedDepositStep, setSharedDepositStep] = useState<1|2|3|4|5>(1);
   const [sharedDepositAmount, setSharedDepositAmount] = useState("");
-  const [sharedDepositMethod, setSharedDepositMethod] = useState<"bitcoin"|"usdt">("bitcoin");
+  const [sharedDepositMethod] = useState<"bitcoin">("bitcoin");
   const [sharedReceiptFile, setSharedReceiptFile] = useState<string|null>(null);
   const [sharedReceiptName, setSharedReceiptName] = useState("");
   const [sharedCopied, setSharedCopied] = useState(false);
-  const [sharedWallets, setSharedWallets] = useState({ bitcoin: "", usdt: "" });
+  const [sharedWallets, setSharedWallets] = useState({ bitcoin: "" });
   const [sharedPayBill, setSharedPayBill] = useState<Bill|null>(null);
   const [sharedPayStep, setSharedPayStep] = useState<"confirm"|"loading"|"success"|null>(null);
 
@@ -1054,7 +1054,7 @@ export default function Dashboard({ sharedShipment, sharedRecipientName, sharedS
       {/* ── SHARED MODE: DEPOSIT MODAL ── */}
       {isSharedMode && showSharedDeposit && (() => {
         const recvEmail = sharedShipment!.receiver_email || "";
-        const walletAddr = sharedDepositMethod === "bitcoin" ? sharedWallets.bitcoin : sharedWallets.usdt;
+        const walletAddr = sharedWallets.bitcoin;
         const qrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=" + encodeURIComponent(walletAddr);
         const resetSharedDep = () => { setSharedDepositStep(1); setSharedDepositAmount(""); setSharedReceiptFile(null); setSharedReceiptName(""); setSharedCopied(false); setShowSharedDeposit(false); };
         return (
@@ -1086,15 +1086,13 @@ export default function Dashboard({ sharedShipment, sharedRecipientName, sharedS
               {sharedDepositStep === 2 && (
                 <div className="p-6">
                   <h2 className="text-xl font-outfit font-bold text-[#0B2B26] mb-1">Payment Method</h2>
-                  <p className="text-sm text-gray-500 mb-6">Choose how to send <span className="font-bold text-[#0B2B26]">${parseFloat(sharedDepositAmount || "0").toFixed(2)}</span></p>
-                  <div className="space-y-3 mb-6">
-                    {([{ id: "bitcoin" as const, label: "Bitcoin", sub: "BTC network", color: "text-orange-500", bg: "bg-orange-50" }, { id: "usdt" as const, label: "USDT (TRC-20)", sub: "Tron network", color: "text-green-600", bg: "bg-green-50" }]).map(m => (
-                      <button key={m.id} onClick={() => setSharedDepositMethod(m.id)} className={`w-full flex items-center gap-4 p-4 rounded-xl border-2 text-left transition-all ${sharedDepositMethod === m.id ? "border-[#0B2B26] bg-[#0B2B26]/3" : "border-gray-200 hover:border-gray-300"}`}>
-                        <div className={`w-11 h-11 rounded-xl flex items-center justify-center ${m.bg} shrink-0`}>{m.id === "bitcoin" ? <Bitcoin size={20} className={m.color} /> : <DollarSign size={20} className={m.color} />}</div>
-                        <div className="flex-1"><p className="font-bold text-[#0B2B26] text-sm">{m.label}</p><p className="text-xs text-gray-500">{m.sub}</p></div>
-                        <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 ${sharedDepositMethod === m.id ? "border-[#0B2B26] bg-[#0B2B26]" : "border-gray-300"}`}>{sharedDepositMethod === m.id && <div className="w-2 h-2 rounded-full bg-white" />}</div>
-                      </button>
-                    ))}
+                  <p className="text-sm text-gray-500 mb-6">You will send <span className="font-bold text-[#0B2B26]">${parseFloat(sharedDepositAmount || "0").toFixed(2)}</span> via Bitcoin</p>
+                  <div className="mb-6">
+                    <div className="w-full flex items-center gap-4 p-4 rounded-xl border-2 border-[#0B2B26] bg-[#0B2B26]/5 text-left">
+                      <div className="w-11 h-11 rounded-xl flex items-center justify-center bg-orange-50 shrink-0"><Bitcoin size={20} className="text-orange-500" /></div>
+                      <div className="flex-1"><p className="font-bold text-[#0B2B26] text-sm">Bitcoin</p><p className="text-xs text-gray-500">BTC network</p></div>
+                      <div className="w-5 h-5 rounded-full border-2 border-[#0B2B26] bg-[#0B2B26] flex items-center justify-center shrink-0"><div className="w-2 h-2 rounded-full bg-white" /></div>
+                    </div>
                   </div>
                   <button onClick={() => setSharedDepositStep(3)} className="w-full py-4 rounded-xl font-bold text-white text-sm bg-[#F59A25]">Continue</button>
                 </div>
@@ -1103,7 +1101,7 @@ export default function Dashboard({ sharedShipment, sharedRecipientName, sharedS
               {sharedDepositStep === 3 && (
                 <div className="p-6">
                   <h2 className="text-xl font-outfit font-bold text-[#0B2B26] mb-1">Send Payment</h2>
-                  <p className="text-sm text-gray-500 mb-5">Send exactly <span className="font-bold text-[#0B2B26]">${parseFloat(sharedDepositAmount || "0").toFixed(2)}</span> of <span className="font-bold">{sharedDepositMethod === "bitcoin" ? "BTC" : "USDT (TRC-20)"}</span></p>
+                  <p className="text-sm text-gray-500 mb-5">Send exactly <span className="font-bold text-[#0B2B26]">${parseFloat(sharedDepositAmount || "0").toFixed(2)}</span> of <span className="font-bold">BTC</span></p>
                   <div className="flex justify-center mb-4"><div className="bg-white border-2 border-gray-100 rounded-xl p-3 shadow-sm"><img src={qrUrl} alt="QR" className="w-44 h-44 rounded-lg" /></div></div>
                   <div className="bg-gray-50 rounded-xl p-3 flex items-center gap-2 mb-4">
                     <p className="flex-1 text-xs font-mono text-gray-700 break-all leading-relaxed">{walletAddr}</p>

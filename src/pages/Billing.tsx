@@ -27,13 +27,13 @@ export default function Billing() {
   const [bills, setBills] = useState<Bill[]>([]);
   const [deposits, setDeposits] = useState<Deposit[]>([]);
   const [balance, setBalance] = useState(0);
-  const [walletAddresses, setWalletAddresses] = useState({ bitcoin: "", usdt: "" });
+  const [walletAddresses, setWalletAddresses] = useState({ bitcoin: "" });
 
   // ── Deposit modal ──
   const [showDeposit, setShowDeposit] = useState(false);
   const [step, setStep] = useState<DepositStep>(1);
   const [depositAmount, setDepositAmount] = useState("");
-  const [depositMethod, setDepositMethod] = useState<"bitcoin" | "usdt">("bitcoin");
+  const [depositMethod] = useState<"bitcoin">("bitcoin");
   const [receiptFile, setReceiptFile] = useState<string | null>(null);
   const [receiptName, setReceiptName] = useState("");
   const [copied, setCopied] = useState(false);
@@ -174,7 +174,7 @@ export default function Billing() {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const walletAddr = depositMethod === "bitcoin" ? walletAddresses.bitcoin : walletAddresses.usdt;
+  const walletAddr = walletAddresses.bitcoin;
   const qrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=" + encodeURIComponent(walletAddr);
 
   const unpaidBills = bills.filter(b => b.status === "unpaid");
@@ -437,29 +437,20 @@ export default function Billing() {
             {step === 2 && (
               <div className="p-6">
                 <h2 className="text-xl font-outfit font-bold text-[#0B2B26] mb-1">Payment Method</h2>
-                <p className="text-sm text-gray-500 mb-6">Choose how you want to send <span className="font-bold text-[#0B2B26]">${parseFloat(depositAmount || "0").toFixed(2)}</span></p>
-                <div className="space-y-3 mb-6">
-                  {([
-                    { id: "bitcoin", label: "Bitcoin", sub: "BTC network", icon: Bitcoin, color: "text-orange-500", bg: "bg-orange-50" },
-                    { id: "usdt", label: "USDT (TRC-20)", sub: "Tron network", icon: DollarSign, color: "text-green-600", bg: "bg-green-50" },
-                  ] as const).map(m => (
-                    <button
-                      key={m.id}
-                      onClick={() => setDepositMethod(m.id)}
-                      className={`w-full flex items-center gap-4 p-4 rounded-xl border-2 text-left transition-all ${depositMethod === m.id ? "border-[#0B2B26] bg-[#0B2B26]/3" : "border-gray-200 hover:border-gray-300"}`}
-                    >
-                      <div className={`w-11 h-11 rounded-xl flex items-center justify-center ${m.bg} shrink-0`}>
-                        <m.icon size={20} className={m.color} />
-                      </div>
-                      <div className="flex-1">
-                        <p className="font-bold text-[#0B2B26] text-sm">{m.label}</p>
-                        <p className="text-xs text-gray-500">{m.sub}</p>
-                      </div>
-                      <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors ${depositMethod === m.id ? "border-[#0B2B26] bg-[#0B2B26]" : "border-gray-300"}`}>
-                        {depositMethod === m.id && <div className="w-2 h-2 rounded-full bg-white" />}
-                      </div>
-                    </button>
-                  ))}
+                <p className="text-sm text-gray-500 mb-6">You will send <span className="font-bold text-[#0B2B26]">${parseFloat(depositAmount || "0").toFixed(2)}</span> via Bitcoin</p>
+                <div className="mb-6">
+                  <div className="w-full flex items-center gap-4 p-4 rounded-xl border-2 border-[#0B2B26] bg-[#0B2B26]/5 text-left">
+                    <div className="w-11 h-11 rounded-xl flex items-center justify-center bg-orange-50 shrink-0">
+                      <Bitcoin size={20} className="text-orange-500" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="font-bold text-[#0B2B26] text-sm">Bitcoin</p>
+                      <p className="text-xs text-gray-500">BTC network</p>
+                    </div>
+                    <div className="w-5 h-5 rounded-full border-2 border-[#0B2B26] bg-[#0B2B26] flex items-center justify-center shrink-0">
+                      <div className="w-2 h-2 rounded-full bg-white" />
+                    </div>
+                  </div>
                 </div>
                 <button
                   onClick={() => setStep(3)}
@@ -475,7 +466,7 @@ export default function Billing() {
             {step === 3 && (
               <div className="p-6">
                 <h2 className="text-xl font-outfit font-bold text-[#0B2B26] mb-1">Send Payment</h2>
-                <p className="text-sm text-gray-500 mb-5">Send exactly <span className="font-bold text-[#0B2B26]">${parseFloat(depositAmount || "0").toFixed(2)}</span> worth of <span className="font-bold">{depositMethod === "bitcoin" ? "BTC" : "USDT (TRC-20)"}</span> to the address below.</p>
+                <p className="text-sm text-gray-500 mb-5">Send exactly <span className="font-bold text-[#0B2B26]">${parseFloat(depositAmount || "0").toFixed(2)}</span> worth of <span className="font-bold">BTC</span> to the address below.</p>
 
                 {/* QR Code */}
                 <div className="flex justify-center mb-4">
@@ -499,7 +490,7 @@ export default function Billing() {
                 <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-5 flex gap-3">
                   <AlertTriangle size={16} className="text-amber-500 shrink-0 mt-0.5" />
                   <p className="text-xs text-amber-700 leading-relaxed">
-                    <span className="font-bold">Important:</span> Only send <span className="font-bold">{depositMethod === "bitcoin" ? "Bitcoin (BTC)" : "USDT via TRC-20 network"}</span> to this address. Sending any other cryptocurrency or using a different network may result in <span className="font-bold">permanent loss of funds</span>.
+                    <span className="font-bold">Important:</span> Only send <span className="font-bold">Bitcoin (BTC)</span> to this address. Sending any other cryptocurrency may result in <span className="font-bold">permanent loss of funds</span>.
                   </p>
                 </div>
 

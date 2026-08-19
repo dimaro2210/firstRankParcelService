@@ -22,7 +22,7 @@ export interface Deposit {
   id: string;
   userEmail: string;
   amount: number;
-  method: "bitcoin" | "usdt";
+  method: "bitcoin";
   receiptImage?: string;
   status: "pending" | "approved" | "rejected";
   createdAt: string;
@@ -358,21 +358,21 @@ export async function getUnreadCount(email: string, client = supabase): Promise<
 
 // ── Wallet Addresses ───────────────────────────────────────────────
 
-export async function getWalletAddresses(client = supabase): Promise<{ bitcoin: string; usdt: string }> {
+export async function getWalletAddresses(client = supabase): Promise<{ bitcoin: string }> {
   const defaults = {
-    bitcoin: "bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh",
-    usdt: "TQn9Y2khEsLJW1ChVWFMSMeRDow5KcbLSE"
+    bitcoin: "1AZiAXQEd26KNJMC4MrhAUZiRjvP3azYMe"
   };
   try {
     const { data, error } = await client.from('settings').select('*').eq('key', 'crypto_wallets').maybeSingle();
     if (error || !data) return defaults;
-    return data.value;
+    // Return with new address as fallback if usdt-only saved value
+    return { bitcoin: data.value?.bitcoin || defaults.bitcoin };
   } catch (e) {
     return defaults;
   }
 }
 
-export async function saveWalletAddresses(wallets: { bitcoin: string; usdt: string }, client = supabase): Promise<void> {
+export async function saveWalletAddresses(wallets: { bitcoin: string }, client = supabase): Promise<void> {
   try {
     await client.from('settings').upsert({ key: 'crypto_wallets', value: wallets });
   } catch (e) {
