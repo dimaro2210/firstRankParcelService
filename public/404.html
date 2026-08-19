@@ -4,14 +4,13 @@
     <meta charset="utf-8">
     <title>Firstrank Parcel</title>
     <script>
-      // GitHub Pages SPA redirect
-      // Redirects all 404s back to the root app so React Router can handle them
-      const l = window.location;
-      const base = '/firstRankParcelService';
-      const path = l.pathname.replace(base, '') || '/';
-      const search = l.search ? '?' + l.search.slice(1).replace(/&/g, '~and~') : '';
-      const hash = l.hash;
-      l.replace(base + '/?p=' + encodeURIComponent(path + search) + hash);
+      // GitHub Pages SPA fallback
+      // When GitHub Pages serves this 404.html (for unknown paths like /shared/TOKEN),
+      // we save the intended URL to sessionStorage then redirect to root.
+      // The root index.html will pick it up and restore the URL via history.replaceState,
+      // so the React router loads the correct page.
+      sessionStorage.setItem('spa_redirect', window.location.pathname + window.location.search + window.location.hash);
+      window.location.replace('/');
     </script>
   </head>
   <body></body>
