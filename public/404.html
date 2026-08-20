@@ -3,15 +3,22 @@
   <head>
     <meta charset="utf-8">
     <title>Firstrank Parcel</title>
-    <script>
-      // GitHub Pages SPA fallback
-      // When GitHub Pages serves this 404.html (for unknown paths like /shared/TOKEN),
-      // we save the intended URL to sessionStorage then redirect to root.
-      // The root index.html will pick it up and restore the URL via history.replaceState,
-      // so the React router loads the correct page.
-      sessionStorage.setItem('spa_redirect', window.location.pathname + window.location.search + window.location.hash);
-      window.location.replace('/');
+    <script type="text/javascript">
+      // Single Page Apps for GitHub Pages
+      // MIT License
+      // https://github.com/rafgraph/spa-github-pages
+      // pathSegmentsToKeep = 0 for custom domains (e.g. firstrankparcel.com)
+      var pathSegmentsToKeep = 0;
+      var l = window.location;
+      l.replace(
+        l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
+        l.pathname.split('/').slice(0, 1 + pathSegmentsToKeep).join('/') + '/?/' +
+        l.pathname.slice(1).split('/').slice(pathSegmentsToKeep).join('/').replace(/&/g, '~and~') +
+        (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
+        l.hash
+      );
     </script>
   </head>
-  <body></body>
+  <body>
+  </body>
 </html>
