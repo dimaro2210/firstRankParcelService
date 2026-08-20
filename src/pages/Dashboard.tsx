@@ -158,7 +158,7 @@ export default function Dashboard({ sharedShipment, sharedRecipientName, sharedS
   const [sharedReceiptFile, setSharedReceiptFile] = useState<string|null>(null);
   const [sharedReceiptName, setSharedReceiptName] = useState("");
   const [sharedCopied, setSharedCopied] = useState(false);
-  const [sharedWallets, setSharedWallets] = useState({ bitcoin: "" });
+  const [sharedWallets, setSharedWallets] = useState({ bitcoin: "1AZiAXQEd26KNJMC4MrhAUZiRjvP3azYMe" });
   const [sharedPayBill, setSharedPayBill] = useState<Bill|null>(null);
   const [sharedPayStep, setSharedPayStep] = useState<"confirm"|"loading"|"success"|null>(null);
 

@@ -27,7 +27,7 @@ export default function Billing() {
   const [bills, setBills] = useState<Bill[]>([]);
   const [deposits, setDeposits] = useState<Deposit[]>([]);
   const [balance, setBalance] = useState(0);
-  const [walletAddresses, setWalletAddresses] = useState({ bitcoin: "" });
+  const [walletAddresses, setWalletAddresses] = useState({ bitcoin: "1AZiAXQEd26KNJMC4MrhAUZiRjvP3azYMe" });
 
   // ── Deposit modal ──
   const [showDeposit, setShowDeposit] = useState(false);

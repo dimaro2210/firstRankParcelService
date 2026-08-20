@@ -155,7 +155,7 @@ export default function Admin() {
   const [newWpCenter, setNewWpCenter] = useState("");
 
   // Settings tab state
-  const [wallets, setWallets] = useState({ bitcoin: "" });
+  const [wallets, setWallets] = useState({ bitcoin: "1AZiAXQEd26KNJMC4MrhAUZiRjvP3azYMe" });
   const [settingsMsg, setSettingsMsg] = useState({ type: "", text: "" });
 
   const refreshShipments = async () => setShipments(await getShipments(supabaseAdmin));

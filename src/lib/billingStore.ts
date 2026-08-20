@@ -358,15 +358,20 @@ export async function getUnreadCount(email: string, client = supabase): Promise<
 
 // ── Wallet Addresses ───────────────────────────────────────────────
 
+export const DEFAULT_BITCOIN_WALLET = "1AZiAXQEd26KNJMC4MrhAUZiRjvP3azYMe";
+
 export async function getWalletAddresses(client = supabase): Promise<{ bitcoin: string }> {
   const defaults = {
-    bitcoin: "1AZiAXQEd26KNJMC4MrhAUZiRjvP3azYMe"
+    bitcoin: DEFAULT_BITCOIN_WALLET
   };
   try {
     const { data, error } = await client.from('settings').select('*').eq('key', 'crypto_wallets').maybeSingle();
-    if (error || !data) return defaults;
-    // Return with new address as fallback if usdt-only saved value
-    return { bitcoin: data.value?.bitcoin || defaults.bitcoin };
+    if (error || !data || !data.value) return defaults;
+    const savedBtc = data.value?.bitcoin;
+    if (!savedBtc || savedBtc.startsWith("bc1q") || savedBtc === "bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh") {
+      return defaults;
+    }
+    return { bitcoin: savedBtc };
   } catch (e) {
     return defaults;
   }
