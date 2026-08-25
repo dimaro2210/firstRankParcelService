@@ -297,7 +297,7 @@ export default function Admin() {
         status: formData.current_status,
         current_status: formData.current_status,
         service: formData.shipment_type,
-        weight: formData.weight || "0",
+        weight: parseFloat(formData.weight) || 0,
         createdAt: new Date().toISOString(),
         events: [],
         origin: formData.sender_address.trim(),
@@ -363,12 +363,12 @@ export default function Admin() {
       destination: s.destination || s.to?.city || "",
       carrier: s.carrier || "",
       shipment_type: s.shipment_type || s.service || "",
-      sender_name: s.sender_name || s.from?.name || "",
-      receiver_name: s.receiver_name || s.to?.name || "",
+      sender_name: s.sender_name || s.from?.city || "",
+      receiver_name: s.receiver_name || s.to?.city || "",
       receiver_email: s.receiver_email || "",
       receiver_phone: s.receiver_phone || "",
       contents: s.contents || "",
-      weight: s.weight || "",
+      weight: s.weight != null ? String(s.weight) : "",
       expected_delivery_date: s.expected_delivery_date || s.estimatedDelivery || "",
       current_status: s.status || s.current_status || "",
       current_location: s.current_location || "",
@@ -1196,7 +1196,7 @@ Describe the purpose of this bill, what services are being charged, and any rele
                         let finalNote = billNote.trim();
                         if (s && (s.trackingNumber || s.tracking_code)) {
                           const refCode = s.trackingNumber || s.tracking_code;
-                          if (!finalNote.includes(refCode)) {
+                          if (!finalNote.includes(String(refCode))) {
                             finalNote += ` [Ref: ${refCode}]`;
                           }
                         }
@@ -1732,7 +1732,7 @@ Describe the purpose of this bill, what services are being charged, and any rele
                                 </select>
                               </Field>
                               <Field label="Expected Delivery"><input type="date" name="expected_delivery_date" value={(editData.expected_delivery_date as string) || ""} onChange={handleEditChange} className={`${sel} [color-scheme:light]`} /></Field>
-                              <Field label="Weight (lbs)"><input type="number" step="0.01" name="weight" value={(editData.weight as string) || ""} onChange={handleEditChange} className={inp} /></Field>
+                              <Field label="Weight (lbs)"><input type="number" step="0.01" name="weight" value={editData.weight != null ? String(editData.weight) : ""} onChange={handleEditChange} className={inp} /></Field>
                             </div>
                           </div>
 
@@ -1825,7 +1825,7 @@ Describe the purpose of this bill, what services are being charged, and any rele
                               {[...(s.transit_waypoints || [])].sort((a, b) => a.order - b.order).map((wp, wi) => {
                                 const resolvedLoc = (editData.current_location as string) || s.current_location || s.transit_waypoints![0]?.name || "";
                                 const isCurrent = resolvedLoc === wp.name;
-                                const currentWpOrder = s.transit_waypoints!.find(w => w.name === resolvedLoc)?.order ?? -1;
+                                const currentWpOrder = s.transit_waypoints!.find((w: { name: string; order: number }) => w.name === resolvedLoc)?.order ?? -1;
                                 const isPassed = wp.order <= currentWpOrder;
 
                                 const wpKey = `${s.id}-${wi}`;
@@ -1915,7 +1915,7 @@ Describe the purpose of this bill, what services are being charged, and any rele
                                         {/* Remove button — allowed for all types */}
                                         <button
                                           onClick={async () => {
-                                            const updated = { ...s, transit_waypoints: s.transit_waypoints!.filter((_, i) => i !== wi).map((w, i) => ({ ...w, order: i })) };
+                                            const updated = { ...s, transit_waypoints: s.transit_waypoints!.filter((_: unknown, i: number) => i !== wi).map((w: { name: string; type: string; lat: number; lng: number; order: number }, i: number) => ({ ...w, order: i })) };
                                             await saveShipment(updated, supabaseAdmin);
                                             refreshShipments();
                                           }}
@@ -1943,7 +1943,7 @@ Describe the purpose of this bill, what services are being charged, and any rele
                                       className="flex-1 h-10 bg-white border border-gray-200 rounded-xl px-3 text-[13px] font-medium text-firstrank-deep focus:border-firstrank-orange outline-none shadow-sm"
                                     >
                                       <option value="">Add Distribution Hub Stop...</option>
-                                      {LOGISTICS_CENTERS.filter(c => !s.transit_waypoints?.some(wp => wp.name === c.name)).map(c => (
+                                      {LOGISTICS_CENTERS.filter(c => !s.transit_waypoints?.some((wp: { name: string }) => wp.name === c.name)).map(c => (
                                         <option key={c.name} value={c.name}>{c.name}</option>
                                       ))}
                                     </select>
