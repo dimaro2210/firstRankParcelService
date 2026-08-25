@@ -368,7 +368,7 @@ export default function Admin() {
       receiver_email: s.receiver_email || "",
       receiver_phone: s.receiver_phone || "",
       contents: s.contents || "",
-      weight: s.weight != null ? String(s.weight) : "",
+      weight: s.weight ?? undefined,
       expected_delivery_date: s.expected_delivery_date || s.estimatedDelivery || "",
       current_status: s.status || s.current_status || "",
       current_location: s.current_location || "",
