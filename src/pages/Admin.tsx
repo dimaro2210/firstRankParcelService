@@ -4,7 +4,7 @@ import type { Shipment, RegisteredUser } from "@/lib/shipmentStore";
 import { getBills, saveBill, deleteBill, getDeposits, saveDeposit, getUserBalance, setUserBalance, saveNotification, generateId, getWalletAddresses, saveWalletAddresses } from "@/lib/billingStore";
 import { sendShipmentEmail, sendBillEmail, sendDepositEmail, sendAccountEmail } from "@/lib/emailService";
 import type { Bill, Deposit } from "@/lib/billingStore";
-import { generateTransitWaypoints } from "@/lib/waypointEngine";
+import { generateTransitWaypoints, enrichWithDistributionCenters } from "@/lib/waypointEngine";
 import { Link } from "wouter";
 import { supabase, supabaseAdmin } from "@/lib/supabase";
 import { Package, MapPin, User, Save, CheckCircle, RefreshCw, Copy, Pencil, Trash2, X, AlertCircle, List, ArrowLeft, Menu, ChevronRight, Eye, EyeOff, CreditCard, DollarSign, FileText, Check, XCircle, Plane, Plus, Loader2, Route, Navigation, Settings, Wallet } from "lucide-react";
@@ -153,6 +153,9 @@ export default function Admin() {
   const [waypointMsg, setWaypointMsg] = useState({ type: "", text: "" });
   const [editingWaypoints, setEditingWaypoints] = useState<string | null>(null); // shipment ID
   const [newWpCenter, setNewWpCenter] = useState("");
+  // Inline waypoint name editing — key format: "${shipmentId}-${waypointIndex}"
+  const [editingWaypointKey, setEditingWaypointKey] = useState<string | null>(null);
+  const [editingWaypointName, setEditingWaypointName] = useState("");
 
   // Settings tab state
   const [wallets, setWallets] = useState({ bitcoin: "1AZiAXQEd26KNJMC4MrhAUZiRjvP3azYMe" });
@@ -335,10 +338,11 @@ export default function Admin() {
             if (result.error) {
               setWaypointMsg({ type: "error", text: `Route generation failed: ${result.error}. You can add waypoints manually.` });
             } else if (result.waypoints.length > 0) {
-              newShipment.transit_waypoints = result.waypoints;
+              const enriched = enrichWithDistributionCenters(result.waypoints);
+              newShipment.transit_waypoints = enriched;
               await saveShipment(newShipment, supabaseAdmin);
               refreshShipments();
-              setWaypointMsg({ type: "success", text: `✅ Auto-generated ${result.waypoints.length} transit locations` });
+              setWaypointMsg({ type: "success", text: `✅ Auto-generated ${enriched.length} transit locations (incl. distribution centers)` });
             }
           })
           .catch(() => {
@@ -1795,9 +1799,10 @@ Describe the purpose of this bill, what services are being charged, and any rele
                                       if (result.error) {
                                         setManageMsg({ type: "error", text: result.error });
                                       } else if (result.waypoints && result.waypoints.length > 0) {
-                                        await saveShipment({ ...s, transit_waypoints: result.waypoints }, supabaseAdmin);
+                                        const enriched = enrichWithDistributionCenters(result.waypoints);
+                                        await saveShipment({ ...s, transit_waypoints: enriched }, supabaseAdmin);
                                         refreshShipments();
-                                        setManageMsg({ type: "success", text: "Journey timeline regenerated!" });
+                                        setManageMsg({ type: "success", text: `Journey timeline regenerated with ${enriched.length} stops!` });
                                       } else {
                                         setManageMsg({ type: "error", text: "Could not generate route." });
                                       }
@@ -1823,9 +1828,12 @@ Describe the purpose of this bill, what services are being charged, and any rele
                                 const currentWpOrder = s.transit_waypoints!.find(w => w.name === resolvedLoc)?.order ?? -1;
                                 const isPassed = wp.order <= currentWpOrder;
 
+                                const wpKey = `${s.id}-${wi}`;
+                                const isEditingThisWp = editingWaypointKey === wpKey;
+
                                 return (
                                   <div key={wi} className="relative flex items-center justify-between group">
-                                    <div className="flex items-center gap-4">
+                                    <div className="flex items-center gap-4 flex-1 min-w-0">
                                       {/* Dot */}
                                       <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 z-10 transition-all border-2 ${isCurrent ? "bg-firstrank-orange border-white scale-125 shadow-lg shadow-firstrank-orange/40" :
                                           isPassed ? "bg-green-500 border-white" :
@@ -1836,33 +1844,87 @@ Describe the purpose of this bill, what services are being charged, and any rele
                                             <div className="w-1.5 h-1.5 rounded-full bg-gray-300" />}
                                       </div>
 
-                                      <button
-                                        onClick={(e) => {
-                                          e.preventDefault();
-                                          setEditData({ 
-                                            ...editData, 
-                                            current_location: wp.name,
-                                            current_status: wp.type === "origin" ? "Picked Up" : wp.type === "destination" ? "Delivered" : "In Transit"
-                                          });
-                                        }}
-                                        className="text-left group/btn"
-                                      >
-                                        <p className={`text-[14px] font-bold leading-none ${isCurrent ? "text-firstrank-orange" : "text-firstrank-deep group-hover/btn:text-firstrank-orange transition-colors"}`}>{wp.name}</p>
-                                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-1">{wp.type}</p>
-                                      </button>
+                                      {isEditingThisWp ? (
+                                        /* ── Inline name editor ── */
+                                        <div className="flex-1 flex gap-2 min-w-0">
+                                          <input
+                                            autoFocus
+                                            value={editingWaypointName}
+                                            onChange={e => setEditingWaypointName(e.target.value)}
+                                            onKeyDown={async (e) => {
+                                              if (e.key === 'Enter') {
+                                                const trimmed = editingWaypointName.trim();
+                                                if (!trimmed) return;
+                                                const wps = [...s.transit_waypoints!];
+                                                wps[wi] = { ...wps[wi], name: trimmed };
+                                                await saveShipment({ ...s, transit_waypoints: wps }, supabaseAdmin);
+                                                refreshShipments();
+                                                setEditingWaypointKey(null);
+                                              } else if (e.key === 'Escape') {
+                                                setEditingWaypointKey(null);
+                                              }
+                                            }}
+                                            className="flex-1 h-8 px-2 border border-firstrank-orange rounded-lg text-[13px] font-medium text-firstrank-deep outline-none focus:ring-2 focus:ring-firstrank-orange/30 min-w-0"
+                                          />
+                                          <button
+                                            onClick={async () => {
+                                              const trimmed = editingWaypointName.trim();
+                                              if (!trimmed) return;
+                                              const wps = [...s.transit_waypoints!];
+                                              wps[wi] = { ...wps[wi], name: trimmed };
+                                              await saveShipment({ ...s, transit_waypoints: wps }, supabaseAdmin);
+                                              refreshShipments();
+                                              setEditingWaypointKey(null);
+                                            }}
+                                            className="h-8 px-2 rounded-lg bg-firstrank-orange text-white text-[12px] font-bold shrink-0"
+                                          >
+                                            <Check size={12} />
+                                          </button>
+                                        </div>
+                                      ) : (
+                                        <button
+                                          onClick={(e) => {
+                                            e.preventDefault();
+                                            setEditData({ 
+                                              ...editData, 
+                                              current_location: wp.name,
+                                              current_status: wp.type === "origin" ? "Picked Up" : wp.type === "destination" ? "Delivered" : "In Transit"
+                                            });
+                                          }}
+                                          className="text-left group/btn flex-1 min-w-0"
+                                        >
+                                          <p className={`text-[14px] font-bold leading-none truncate ${isCurrent ? "text-firstrank-orange" : "text-firstrank-deep group-hover/btn:text-firstrank-orange transition-colors"}`}>{wp.name}</p>
+                                          <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-1">{wp.type}</p>
+                                        </button>
+                                      )}
                                     </div>
 
-                                    {editingWaypoints === s.id && wp.type !== "origin" && wp.type !== "destination" && (
-                                      <button
-                                        onClick={async () => {
-                                          const updated = { ...s, transit_waypoints: s.transit_waypoints!.filter((_, i) => i !== wi).map((w, i) => ({ ...w, order: i })) };
-                                          await saveShipment(updated, supabaseAdmin);
-                                          refreshShipments();
-                                        }}
-                                        className="p-1.5 rounded-lg text-gray-300 hover:text-red-500 hover:bg-red-50 transition-all"
-                                      >
-                                        <X size={14} />
-                                      </button>
+                                    {editingWaypoints === s.id && !isEditingThisWp && (
+                                      <div className="flex items-center gap-1 shrink-0 ml-2">
+                                        {/* Edit name button */}
+                                        <button
+                                          onClick={() => {
+                                            setEditingWaypointKey(wpKey);
+                                            setEditingWaypointName(wp.name);
+                                          }}
+                                          className="p-1.5 rounded-lg text-gray-300 hover:text-firstrank-orange hover:bg-orange-50 transition-all"
+                                          title="Edit name"
+                                        >
+                                          <Pencil size={12} />
+                                        </button>
+                                        {/* Remove button — allowed for all types */}
+                                        <button
+                                          onClick={async () => {
+                                            const updated = { ...s, transit_waypoints: s.transit_waypoints!.filter((_, i) => i !== wi).map((w, i) => ({ ...w, order: i })) };
+                                            await saveShipment(updated, supabaseAdmin);
+                                            refreshShipments();
+                                          }}
+                                          className="p-1.5 rounded-lg text-gray-300 hover:text-red-500 hover:bg-red-50 transition-all"
+                                          title="Remove stop"
+                                        >
+                                          <X size={12} />
+                                        </button>
+                                      </div>
                                     )}
                                   </div>
                                 );
@@ -1983,7 +2045,7 @@ Describe the purpose of this bill, what services are being charged, and any rele
                               try {
                                 const result = await generateTransitWaypoints(updated.origin || "", updated.destination || "");
                                 if (result.waypoints.length > 0) {
-                                  updated.transit_waypoints = result.waypoints;
+                                  updated.transit_waypoints = enrichWithDistributionCenters(result.waypoints);
                                   await saveShipment(updated, supabaseAdmin);
                                   refreshShipments();
                                 }

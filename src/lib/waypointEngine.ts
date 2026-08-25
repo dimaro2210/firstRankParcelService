@@ -308,6 +308,52 @@ function getFacilitySuffix(index: number): string {
   return FACILITY_SUFFIXES[index % FACILITY_SUFFIXES.length];
 }
 
+// ── Distribution Center Enrichment ─────────────────────────────────────────
+
+/**
+ * Post-process a generated waypoints array to automatically insert a
+ * "[City] Distribution Center" entry after every center-type waypoint.
+ *
+ * This does NOT modify how waypoints are generated — it only enriches the
+ * already-generated list by adding distribution center stops.
+ */
+export function enrichWithDistributionCenters(waypoints: TransitWaypoint[]): TransitWaypoint[] {
+  const enriched: TransitWaypoint[] = [];
+
+  for (const wp of waypoints) {
+    enriched.push(wp);
+
+    // Only add a Distribution Center entry for center-type stops
+    // (skip origin, destination, and flight legs)
+    if (wp.type === 'center') {
+      // Skip if this waypoint is already a Distribution Center
+      if (wp.name.toLowerCase().includes('distribution center')) {
+        continue;
+      }
+
+      // Strip any known facility suffix to get the bare location name
+      let baseName = wp.name;
+      for (const suffix of FACILITY_SUFFIXES) {
+        if (baseName.endsWith(suffix)) {
+          baseName = baseName.slice(0, baseName.length - suffix.length).replace(/,?\s*$/, '').trim();
+          break;
+        }
+      }
+
+      enriched.push({
+        name: `${baseName} Distribution Center`,
+        type: 'center',
+        lat: wp.lat,
+        lng: wp.lng,
+        order: 0, // Re-numbered below
+      });
+    }
+  }
+
+  // Re-assign sequential order numbers after enrichment
+  return enriched.map((wp, i) => ({ ...wp, order: i }));
+}
+
 // ── Main Function ──────────────────────────────────────────────────────────
 
 export interface WaypointResult {
