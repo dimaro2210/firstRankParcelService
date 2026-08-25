@@ -40,8 +40,8 @@ export const sendShipmentEmail = (shipment: any): void => {
     <div style="background-color:#F9FAFB;border:1px solid #E5E7EB;border-radius:12px;padding:20px;margin-bottom:24px;">
       <p style="margin:0 0 10px 0;font-size:14px;color:#4B5563;"><strong>Tracking Number:</strong> ${trackingNumber}</p>
       <p style="margin:0 0 10px 0;font-size:14px;color:#4B5563;"><strong>Service:</strong> ${shipment.service || 'Standard Delivery'}</p>
-      <p style="margin:0 0 10px 0;font-size:14px;color:#4B5563;"><strong>Origin:</strong> ${senderName}</p>
-      <p style="margin:0 0 10px 0;font-size:14px;color:#4B5563;"><strong>Destination:</strong> ${shipment.to?.name || shipment.receiver_name || 'Recipient'}</p>
+      <p style="margin:0 0 10px 0;font-size:14px;color:#4B5563;"><strong>Origin:</strong> ${shipment.sender_address || shipment.from?.address || shipment.origin || 'N/A'}</p>
+      <p style="margin:0 0 10px 0;font-size:14px;color:#4B5563;"><strong>Destination:</strong> ${shipment.receiver_address || shipment.to?.address || shipment.destination || 'N/A'}</p>
       <p style="margin:0;font-size:14px;color:#4B5563;"><strong>Expected Delivery:</strong> ${shipment.estimatedDelivery || shipment.expected_delivery_date || 'TBD'}</p>
     </div>
   `;
